@@ -7,60 +7,68 @@ import '../../utils/calculator_util.dart';
 class CalculatorKeypad extends StatelessWidget {
   const CalculatorKeypad({super.key});
 
+  // Map label → variant
+  ButtonVariant _variantFor(String label) {
+    if (label == '=') return ButtonVariant.equals;
+    if (label == 'DEL' || label == 'AC') return ButtonVariant.action;
+    if (operators.contains(label)) return ButtonVariant.operator;
+    return ButtonVariant.normal;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ctrl = context.read<CalculatorController>();
 
-    return Row(
-      children: [
-        // Kolom kiri: grid angka & operator
-        Expanded(
-          flex: 3,
-          child: Column(
-            children: leftButtons
-                .map((row) => _buildButtonRow(context, row))
-                .toList(),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(14, 0, 14, 16),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F0F0),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Row(
+        children: [
+          // Left: number grid + operators
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: leftButtons
+                  .map((row) => _buildRow(context, row))
+                  .toList(),
+            ),
           ),
-        ),
-        // Kolom kanan: DEL, -, +, =
-        Expanded(
-          flex: 1,
-          child: Column(
-            children: [
-              ...['DEL', '-', '+'].map((l) => _buildSingleButton(context, l)),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
+          // Right: DEL, -, +, =
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                ...['DEL', '-', '+'].map((l) => _buildSingle(context, l)),
+                Expanded(
+                  flex: 2,
                   child: MyButton(
                     buttonText: '=',
-                    color: Colors.green,
-                    textColor: Colors.white,
+                    variant: ButtonVariant.equals,
                     buttonTapped: () => ctrl.onButtonTapped('='),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildButtonRow(BuildContext context, List<String> labels) {
+  Widget _buildRow(BuildContext context, List<String> labels) {
     final ctrl = context.read<CalculatorController>();
     return Expanded(
       child: Row(
         children: labels.map((label) {
           return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: MyButton(
-                buttonText: label,
-                color: Colors.white,
-                textColor: operators.contains(label) ? Colors.green : Colors.black,
-                buttonTapped: () => ctrl.onButtonTapped(label),
-              ),
+            child: MyButton(
+              buttonText: label,
+              variant: _variantFor(label),
+              buttonTapped: () => ctrl.onButtonTapped(label),
             ),
           );
         }).toList(),
@@ -68,17 +76,13 @@ class CalculatorKeypad extends StatelessWidget {
     );
   }
 
-  Widget _buildSingleButton(BuildContext context, String label) {
+  Widget _buildSingle(BuildContext context, String label) {
     final ctrl = context.read<CalculatorController>();
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: MyButton(
-          buttonText: label,
-          color: Colors.white,
-          textColor: Colors.green,
-          buttonTapped: () => ctrl.onButtonTapped(label),
-        ),
+      child: MyButton(
+        buttonText: label,
+        variant: _variantFor(label),
+        buttonTapped: () => ctrl.onButtonTapped(label),
       ),
     );
   }

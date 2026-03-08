@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../controllers/calculator_controller.dart';
+import '../../controllers/calculator_controller.dart';
+import '../../utils/app_theme.dart';
 import '../components/calculator/calculator_display.dart';
 import '../components/calculator/calculator_keypad.dart';
 
@@ -24,14 +25,33 @@ class _CalculatorView extends StatelessWidget {
     final ctrl = context.watch<CalculatorController>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: AppTheme.background,
         elevation: 0,
-        title: const Text(
-          'Calculator',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 22),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppTheme.primary,
+              size: 20,
+            ),
+          ),
         ),
+        title: const Text('Calculator', style: AppTheme.titleLarge),
       ),
       body: Column(
         children: [
@@ -43,10 +63,7 @@ class _CalculatorView extends StatelessWidget {
               hasError: ctrl.hasError,
             ),
           ),
-          const Expanded(
-            flex: 2,
-            child: CalculatorKeypad(),
-          ),
+          const Expanded(flex: 2, child: CalculatorKeypad()),
         ],
       ),
     );
