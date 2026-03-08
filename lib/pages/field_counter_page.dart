@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../controllers/field_counter_controller.dart';
 import '../components/counter/summary_card.dart';
 import '../components/counter/counter_field.dart';
+import '../utils/app_theme.dart';
 
 class FieldCounterPage extends StatefulWidget {
   const FieldCounterPage({super.key});
@@ -22,28 +23,73 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF2F2F2),
+        backgroundColor: AppTheme.background,
         elevation: 0,
-        title: const Text(
-          'Field Counter',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppTheme.primary,
+              size: 20,
+            ),
           ),
         ),
+        title: const Text('Field Counter', style: AppTheme.titleLarge),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.delete_sweep_rounded, color: Colors.green),
-            onPressed: () => setState(() => _ctrl.clearAll()),
-            tooltip: 'Clear semua',
+          GestureDetector(
+            onTap: () => setState(() => _ctrl.clearAll()),
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.delete_sweep_rounded,
+                    color: AppTheme.primary,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Clear',
+                    style: AppTheme.cardSubtitle.copyWith(
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
       body: Column(
         children: [
+          const SizedBox(height: 4),
           SummaryCard(
             numbers: _ctrl.allNumbers,
             fmt: FieldCounterController.fmt,
@@ -68,7 +114,8 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => setState(() => _ctrl.addField()),
-        backgroundColor: Colors.green,
+        backgroundColor: AppTheme.primary,
+        elevation: 4,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/app_theme.dart';
 
 class SummaryCard extends StatelessWidget {
   final List<double> numbers;
@@ -15,32 +16,68 @@ class SummaryCard extends StatelessWidget {
     final max = count > 0 ? numbers.reduce((a, b) => a > b ? a : b) : 0.0;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          color: AppTheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text('Total Angka', style: TextStyle(fontSize: 14, color: Colors.black54)),
-                Text(
-                  '$count',
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.green.shade600),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('TOTAL ANGKA', style: AppTheme.titleMedium),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$count',
+                      style: const TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.textPrimary,
+                        letterSpacing: -1.5,
+                        height: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: const BoxDecoration(
+                    color: AppTheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.numbers_rounded, color: Colors.white, size: 22),
                 ),
               ],
             ),
             if (count > 0) ...[
-              const Divider(height: 16),
+              const SizedBox(height: 16),
+              Container(height: 1, color: AppTheme.border),
+              const SizedBox(height: 14),
               Row(
                 children: [
                   _statChip('Jumlah', fmt(sum)),
+                  _divider(),
                   _statChip('Rata-rata', fmt(avg)),
+                  _divider(),
                   _statChip('Min', fmt(min)),
+                  _divider(),
                   _statChip('Maks', fmt(max)),
                 ],
               ),
@@ -51,13 +88,19 @@ class SummaryCard extends StatelessWidget {
     );
   }
 
+  Widget _divider() => Container(
+        width: 1,
+        height: 32,
+        color: AppTheme.border,
+      );
+
   Widget _statChip(String label, String value) {
     return Expanded(
       child: Column(
         children: [
-          Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
-          const SizedBox(height: 2),
-          Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          Text(label, style: AppTheme.cardSubtitle),
+          const SizedBox(height: 4),
+          Text(value, style: AppTheme.cardTitle),
         ],
       ),
     );
