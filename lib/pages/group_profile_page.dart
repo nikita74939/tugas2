@@ -7,10 +7,10 @@ class GroupInfoPage extends StatelessWidget {
   const GroupInfoPage({super.key});
 
   static const _members = [
-    GroupMember(name: 'Nama Anggota 1', nim: '123456001'),
-    GroupMember(name: 'Nama Anggota 2', nim: '123456002'),
-    GroupMember(name: 'Nama Anggota 3', nim: '123456003'),
-    GroupMember(name: 'Nama Anggota 4', nim: '123456004'),
+    GroupMember(name: 'Nikita', nim: '123230044'),
+    GroupMember(name: 'Fara Katty Sabila Al Kayyis', nim: '1232300**'),
+    GroupMember(name: 'Aisyah Nabila Nur Afifa', nim: '1232300**'),
+    GroupMember(name: 'Nadhifa Alya Syafinka', nim: '1232300**'),
   ];
 
   void _logout(BuildContext context) {
@@ -43,7 +43,11 @@ class GroupInfoPage extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(Icons.arrow_back_rounded, color: AppTheme.primary, size: 20),
+            child: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppTheme.primary,
+              size: 20,
+            ),
           ),
         ),
         title: const Text('Kelompok', style: AppTheme.titleLarge),
@@ -78,14 +82,18 @@ class GroupInfoPage extends StatelessWidget {
                       color: Colors.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.people_rounded, color: Colors.white, size: 24),
+                    child: const Icon(
+                      Icons.people_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Anggota Kelompok',
+                        'Teknologi dan Pemrograman Mobile',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -95,7 +103,7 @@ class GroupInfoPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${_members.length} anggota',
+                        'IF-C',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.6),
                           fontSize: 12,
@@ -115,7 +123,8 @@ class GroupInfoPage extends StatelessWidget {
               child: ListView.separated(
                 itemCount: _members.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 10),
-                itemBuilder: (context, i) => _MemberCard(member: _members[i], index: i),
+                itemBuilder:
+                    (context, i) => _MemberCard(member: _members[i], index: i),
               ),
             ),
             const SizedBox(height: 16),
@@ -140,7 +149,11 @@ class GroupInfoPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.logout_rounded, color: AppTheme.textPrimary, size: 18),
+                    const Icon(
+                      Icons.logout_rounded,
+                      color: AppTheme.textPrimary,
+                      size: 18,
+                    ),
                     const SizedBox(width: 8),
                     const Text(
                       'Logout',
