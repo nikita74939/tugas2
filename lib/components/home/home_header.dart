@@ -20,8 +20,7 @@ class HomeHeader extends StatelessWidget {
                 color: AppTheme.textSecondary.withOpacity(0.4),
               ),
             ),
-            const SizedBox(height: 6),
-            Text('PILIH TOOLS', style: AppTheme.titleMedium),
+            const SizedBox(height: 10),
           ],
         ),
         _buildAvatar(),
@@ -37,11 +36,7 @@ class HomeHeader extends StatelessWidget {
         color: AppTheme.primary,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Icon(
-        Icons.grid_view_rounded,
-        color: Colors.white,
-        size: 20,
-      ),
+      child: const Icon(Icons.grid_view_rounded, color: Colors.white, size: 20),
     );
   }
 }
