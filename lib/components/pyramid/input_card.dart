@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/app_theme.dart';
 
 class InputCard extends StatelessWidget {
   final TextEditingController baseController;
@@ -12,29 +13,37 @@ class InputCard extends StatelessWidget {
     required this.slantController,
   });
 
-  static const _inputDecoration = InputDecoration(
+  static final _inputDecoration = InputDecoration(
     filled: true,
-    fillColor: Colors.white,
-    border: OutlineInputBorder(
+    fillColor: AppTheme.iconBg,
+    border: const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10)),
       borderSide: BorderSide.none,
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide(color: Colors.green, width: 1.5),
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(
+        color: AppTheme.primary.withOpacity(0.4),
+        width: 1.5,
+      ),
     ),
-    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
   );
 
-  Widget _buildInput(String label, TextEditingController controller, String hint) {
+  Widget _buildInput(
+    String label,
+    TextEditingController controller,
+    String hint,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
-        const SizedBox(height: 4),
+        Text(label, style: AppTheme.cardSubtitle),
+        const SizedBox(height: 6),
         TextField(
           controller: controller,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          style: AppTheme.cardTitle,
           decoration: _inputDecoration.copyWith(hintText: hint),
         ),
       ],
@@ -44,21 +53,28 @@ class InputCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        color: AppTheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Input', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('INPUT', style: AppTheme.titleMedium),
+          const SizedBox(height: 14),
+          _buildInput('Sisi Alas (a)', baseController, '...'),
           const SizedBox(height: 12),
-          _buildInput('Sisi Alas (a)', baseController, 'Contoh: 6'),
-          const SizedBox(height: 10),
-          _buildInput('Tinggi (t)', heightController, 'Untuk Volume'),
-          const SizedBox(height: 10),
-          _buildInput('Apotema Sisi (s)', slantController, 'Untuk Luas Permukaan'),
+          _buildInput('Tinggi (t)', heightController, '...'),
+          const SizedBox(height: 12),
+          _buildInput('Apotema Sisi (s)', slantController, '...'),
         ],
       ),
     );

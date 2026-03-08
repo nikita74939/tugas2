@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../components/pyramid/action_button.dart';
 import '../components/pyramid/input_card.dart';
 import '../components/pyramid/pyramid_painter.dart';
 import '../components/pyramid/result_card.dart';
 import '../controllers/pyramid_controller.dart';
 import '../models/pyramid_result.dart';
+import '../utils/app_theme.dart';
 
 class PyramidPage extends StatefulWidget {
   const PyramidPage({super.key});
@@ -51,34 +51,78 @@ class _PyramidPageState extends State<PyramidPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF2F2F2),
+        backgroundColor: AppTheme.background,
         elevation: 0,
-        title: const Text(
-          'Pyramid Calculator',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppTheme.primary,
+              size: 20,
+            ),
           ),
         ),
+        title: const Text('Pyramid', style: AppTheme.titleLarge),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.green),
-            onPressed: _reset,
+          GestureDetector(
+            onTap: _reset,
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.refresh_rounded,
+                color: AppTheme.primary,
+                size: 20,
+              ),
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Ilustrasi Pyramid
             Container(
-              color: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 24),
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
               child: CustomPaint(
                 size: const Size(double.infinity, 160),
                 painter: PyramidPainter(),

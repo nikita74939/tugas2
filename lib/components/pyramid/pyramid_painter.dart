@@ -6,8 +6,8 @@ class PyramidPainter extends CustomPainter {
     final cx = size.width / 2;
     final paint = Paint()..style = PaintingStyle.fill;
 
-    // Shadow
-    paint.color = Colors.grey.shade200;
+    // Shadow bawah limas
+    paint.color = const Color(0xFFE0E0E0);
     final shadowPath = Path()
       ..moveTo(cx - 90, 130)
       ..lineTo(cx + 90, 130)
@@ -16,17 +16,17 @@ class PyramidPainter extends CustomPainter {
       ..close();
     canvas.drawPath(shadowPath, paint);
 
-    // Sisi kiri (terang)
-    paint.color = Colors.green.shade300;
-    final leftFace = Path()
+    // Sisi depan (terang)
+    paint.color = const Color(0xFFD6D6D6);
+    final frontFace = Path()
       ..moveTo(cx, 20)
       ..lineTo(cx - 90, 130)
       ..lineTo(cx + 90, 130)
       ..close();
-    canvas.drawPath(leftFace, paint);
+    canvas.drawPath(frontFace, paint);
 
-    // Sisi kanan (gelap)
-    paint.color = Colors.green.shade600;
+    // Sisi kanan (gelap) — untuk efek 3D
+    paint.color = const Color(0xFF9E9E9E);
     final rightFace = Path()
       ..moveTo(cx, 20)
       ..lineTo(cx + 90, 130)
@@ -37,7 +37,7 @@ class PyramidPainter extends CustomPainter {
     // Outline
     final outlinePaint = Paint()
       ..style = PaintingStyle.stroke
-      ..color = Colors.green.shade700
+      ..color = const Color(0xFF424242)
       ..strokeWidth = 1.5;
     final outline = Path()
       ..moveTo(cx, 20)
@@ -48,14 +48,14 @@ class PyramidPainter extends CustomPainter {
 
     // Garis tinggi (putus-putus)
     final dashedPaint = Paint()
-      ..color = Colors.grey.shade500
+      ..color = const Color(0xFF9E9E9E)
       ..strokeWidth = 1;
     for (double y = 20; y < 130; y += 8) {
       canvas.drawLine(Offset(cx, y), Offset(cx, y + 4), dashedPaint);
     }
 
     // Label
-    final textStyle = TextStyle(color: Colors.grey.shade600, fontSize: 12);
+    const textStyle = TextStyle(color: Color(0xFF757575), fontSize: 12, fontWeight: FontWeight.w600);
     void drawLabel(String text, Offset offset) {
       final tp = TextPainter(
         text: TextSpan(text: text, style: textStyle),

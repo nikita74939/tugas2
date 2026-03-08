@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/pyramid_result.dart';
+import '../../utils/app_theme.dart';
 
 class ResultCard extends StatelessWidget {
   final String result;
@@ -17,34 +18,61 @@ class ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        color: isError ? Colors.red.shade50 : Colors.green.shade50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              isError ? 'Error' : resultLabel,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: isError ? Colors.red : Colors.green.shade700,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      decoration: BoxDecoration(
+        color: isError ? const Color(0xFFF5F5F5) : AppTheme.primary,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isError ? 0.05 : 0.15),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                isError ? 'Error' : resultLabel.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.2,
+                  color: isError ? AppTheme.textSecondary : Colors.white60,
+                ),
               ),
-            ),
-            Text(
-              isError
-                  ? result
-                  : '$result satuan${activeResult == PyramidResult.volume ? '³' : '²'}',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: isError ? Colors.red : Colors.green.shade700,
+              const SizedBox(height: 4),
+              Text(
+                isError ? result : '$result satuan${activeResult == PyramidResult.volume ? '³' : '²'}',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.5,
+                  color: isError ? AppTheme.textPrimary : Colors.white,
+                ),
               ),
+            ],
+          ),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: isError ? AppTheme.iconBg : Colors.white.withOpacity(0.15),
+              shape: BoxShape.circle,
             ),
-          ],
-        ),
+            child: Icon(
+              isError ? Icons.error_outline_rounded : Icons.check_rounded,
+              color: isError ? AppTheme.textSecondary : Colors.white,
+              size: 20,
+            ),
+          ),
+        ],
       ),
     );
   }
