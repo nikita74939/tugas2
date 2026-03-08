@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/app_theme.dart';
 import 'clock_painter.dart';
 
 class ClockDisplay extends StatelessWidget {
@@ -15,21 +16,36 @@ class ClockDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+        // Clock face in a white card
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 48),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppTheme.surface,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
           child: AspectRatio(
             aspectRatio: 1,
             child: CustomPaint(painter: ClockPainter(elapsed)),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 20),
+        // Time text
         Text(
           formattedTime,
-          style: TextStyle(
-            fontSize: 52,
-            fontWeight: FontWeight.w300,
-            color: Colors.green.shade500,
-            letterSpacing: 2,
+          style: const TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.w800,
+            color: AppTheme.textPrimary,
+            letterSpacing: -1.5,
+            fontFeatures: [FontFeature.tabularFigures()],
           ),
         ),
       ],

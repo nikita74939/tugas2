@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/app_theme.dart';
 
 class ControlButtons extends StatelessWidget {
   final bool isRunning;
@@ -21,40 +22,42 @@ class ControlButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 32, top: 8),
+      padding: const EdgeInsets.only(bottom: 36, top: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _ControlButton(
+          _SideButton(
             icon: Icons.refresh_rounded,
             onTap: canReset ? reset : null,
             active: canReset,
           ),
+          // Main play/pause button
           GestureDetector(
             onTap: startPause,
             child: Container(
-              width: 72,
-              height: 72,
+              width: 76,
+              height: 76,
               decoration: BoxDecoration(
-                color: Colors.green,
+                color: AppTheme.primary,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.green.withOpacity(0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 16,
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
               child: Icon(
-                isRunning ? Icons.pause : Icons.play_arrow,
+                isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
                 color: Colors.white,
                 size: 36,
               ),
             ),
           ),
-          _ControlButton(
-            icon: Icons.history,
+          _SideButton(
+            icon: Icons.flag_outlined,
             onTap: canLap ? lap : null,
             active: canLap,
           ),
@@ -64,12 +67,12 @@ class ControlButtons extends StatelessWidget {
   }
 }
 
-class _ControlButton extends StatelessWidget {
+class _SideButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
   final bool active;
 
-  const _ControlButton({
+  const _SideButton({
     required this.icon,
     required this.onTap,
     required this.active,
@@ -79,10 +82,25 @@ class _ControlButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Icon(
-        icon,
-        size: 32,
-        color: active ? Colors.green : Colors.grey.shade400,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: AppTheme.surface,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          size: 22,
+          color: active ? AppTheme.textPrimary : AppTheme.textSecondary,
+        ),
       ),
     );
   }

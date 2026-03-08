@@ -4,6 +4,7 @@ import 'package:tugas2/controllers/stopwatch_controller.dart';
 import '../components/stopwatch/clock_display.dart';
 import '../components/stopwatch/lap_list.dart';
 import '../components/stopwatch/control_buttons.dart';
+import '../utils/app_theme.dart';
 
 class StopwatchPage extends StatelessWidget {
   const StopwatchPage({super.key});
@@ -25,18 +26,37 @@ class _StopwatchView extends StatelessWidget {
     final ctrl = context.watch<StopwatchController>();
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: AppTheme.background,
         elevation: 0,
-        title: const Text(
-          'Stopwatch',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 22),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppTheme.primary,
+              size: 20,
+            ),
+          ),
         ),
+        title: const Text('Stopwatch', style: AppTheme.titleLarge),
       ),
       body: Column(
         children: [
-          const SizedBox(height: 30),
+          const SizedBox(height: 16),
           ClockDisplay(
             elapsed: ctrl.elapsed,
             formattedTime: ctrl.formatDuration(ctrl.elapsed),

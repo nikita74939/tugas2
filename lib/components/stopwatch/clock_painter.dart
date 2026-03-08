@@ -10,44 +10,69 @@ class ClockPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
 
-    // Background circle
-    canvas.drawCircle(center, radius, Paint()..color = Colors.white);
+    // Background circle — white with subtle shadow via outer ring
+    canvas.drawCircle(
+      center,
+      radius,
+      Paint()..color = const Color(0xFFEEEEEE),
+    );
+    canvas.drawCircle(
+      center,
+      radius * 0.93,
+      Paint()..color = Colors.white,
+    );
 
     // Tick marks
-    final tickPaint = Paint()
-      ..color = Colors.grey.shade400
-      ..strokeWidth = 1;
+    final tickPaint = Paint()..strokeCap = StrokeCap.round;
     for (int i = 0; i < 60; i++) {
       final angle = (i * 6) * pi / 180;
       final isMain = i % 5 == 0;
-      final outer = center + Offset(cos(angle - pi / 2), sin(angle - pi / 2)) * radius * 0.95;
-      final inner = center + Offset(cos(angle - pi / 2), sin(angle - pi / 2)) * radius * (isMain ? 0.85 : 0.90);
-      canvas.drawLine(inner, outer, tickPaint..strokeWidth = isMain ? 1.5 : 0.8);
+      final outer = center + Offset(cos(angle - pi / 2), sin(angle - pi / 2)) * radius * 0.90;
+      final inner = center + Offset(cos(angle - pi / 2), sin(angle - pi / 2)) * radius * (isMain ? 0.78 : 0.85);
+      tickPaint
+        ..color = isMain ? const Color(0xFF424242) : const Color(0xFFBDBDBD)
+        ..strokeWidth = isMain ? 2.0 : 1.0;
+      canvas.drawLine(inner, outer, tickPaint);
     }
 
-    // Second hand
+    // Progress arc (seconds)
     final seconds = elapsed.inMilliseconds / 1000.0;
-    final secAngle = (seconds * 6) * pi / 180;
-    final handPaint = Paint()
-      ..color = Colors.grey.shade700
-      ..strokeWidth = 1.2
+    final sweepAngle = (seconds % 60) / 60 * 2 * pi;
+    final arcPaint = Paint()
+      ..color = const Color(0xFF212121)
+      ..strokeWidth = 3.5
+      ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(
-      center - Offset(cos(secAngle - pi / 2), sin(secAngle - pi / 2)) * radius * 0.2,
-      center + Offset(cos(secAngle - pi / 2), sin(secAngle - pi / 2)) * radius * 0.75,
-      handPaint,
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius * 0.90),
+      -pi / 2,
+      sweepAngle,
+      false,
+      arcPaint,
     );
 
-    // Center dot
-    canvas.drawCircle(center, 5, Paint()..color = Colors.white);
-    canvas.drawCircle(
+    // Second hand
+    final secAngle = sweepAngle - pi / 2;
+    final handPaint = Paint()
+      ..color = const Color(0xFF212121)
+      ..strokeWidth = 1.8
+      ..strokeCap = StrokeCap.round;
+    // Tail
+    canvas.drawLine(
+      center - Offset(cos(secAngle), sin(secAngle)) * radius * 0.2,
       center,
-      5,
-      Paint()
-        ..color = Colors.grey.shade600
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5,
+      handPaint..color = const Color(0xFF9E9E9E),
     );
+    // Hand
+    canvas.drawLine(
+      center,
+      center + Offset(cos(secAngle), sin(secAngle)) * radius * 0.70,
+      handPaint..color = const Color(0xFF212121),
+    );
+
+    // Center dot — outer ring
+    canvas.drawCircle(center, 7, Paint()..color = const Color(0xFF212121));
+    canvas.drawCircle(center, 4, Paint()..color = Colors.white);
   }
 
   @override
