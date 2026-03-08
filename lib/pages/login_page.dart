@@ -1,122 +1,226 @@
-// import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import '../components/text_field.dart';
-// import 'package:tugas2/models/user_model.dart';
-// import 'package:tugas2/pages/home_page.dart';
+import 'package:flutter/material.dart';
+import '../../utils/app_theme.dart';
+import '../../models/auth_store.dart';
+import '../../components/auth/auth_text_field.dart';
+import 'register_page.dart';
+import 'home_page.dart';
 
-// class LoginPage extends StatefulWidget {
-//   const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-//   @override
-//   State<LoginPage> createState() => _LoginPageState();
-// }
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
 
-// class _LoginPageState extends State<LoginPage> {
-//   final TextEditingController userC = TextEditingController();
-//   final TextEditingController passC = TextEditingController();
-//   bool isLoggedin = false;
-//   String errorMessage = "";
+class _LoginPageState extends State<LoginPage> {
+  final _userC = TextEditingController();
+  final _passC = TextEditingController();
+  String _error = '';
+  bool _loading = false;
 
-//   void _login() {
-//     setState(() {
-//       if (userC.text == user1.username && passC.text == user1.password) {
-//         errorMessage = "";
+  @override
+  void dispose() {
+    _userC.dispose();
+    _passC.dispose();
+    super.dispose();
+  }
 
-//         Navigator.pushReplacement(
-//           context,
-//           MaterialPageRoute(
-//             builder: (context) => HomePage(name: user1.name),
-//           ),
-//         );
-//       } else {
-//         errorMessage = "salah oi! sini kubisikin, un: nikita & pass: 044";
+  void _login() {
+    final username = _userC.text.trim();
+    final password = _passC.text;
 
-//         // Bisa juga pake logika:
-//         if (userC.text.isEmpty || passC.text.isEmpty) {
-//           errorMessage = "jangan dikosongin dong";
-//         }
-//       }
-//     });
-//   }
+    if (username.isEmpty || password.isEmpty) {
+      setState(() => _error = 'Username dan password tidak boleh kosong.');
+      return;
+    }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Padding(
-//         padding: const EdgeInsets.all(30.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             // image
-//             Image.asset('assets/login_img.png', width: 300),
+    setState(() {
+      _loading = true;
+      _error = '';
+    });
 
-//             const SizedBox(height: 30),
+    // Simulasi delay singkat
+    Future.delayed(const Duration(milliseconds: 400), () {
+      final user = AuthStore.instance.login(username, password);
+      if (!mounted) return;
 
-//             Text(
-//               'Login dulu ya!',
-//               style: GoogleFonts.poppins(
-//                 fontSize: 30,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+        );
+      } else {
+        setState(() {
+          _loading = false;
+          _error = 'Username atau password salah.';
+        });
+      }
+    });
+  }
 
-//             const SizedBox(height: 15),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 60),
 
-//             // error message
-//             if (errorMessage.isNotEmpty)
-//               Text(
-//                 errorMessage,
-//                 textAlign: TextAlign.center,
-//                 style: GoogleFonts.poppins(
-//                   color: Colors.redAccent,
-//                   fontSize: 14,
-//                   fontWeight: FontWeight.w500,
-//                   fontStyle: FontStyle.italic,
-//                 ),
-//               ),
+              // Icon header
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.calculate_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 24),
 
-//             const SizedBox(height: 20),
+              // Title
+              Text('Selamat', style: AppTheme.titleLarge),
+              Text(
+                'Datang',
+                style: AppTheme.titleLarge.copyWith(
+                  color: AppTheme.textSecondary.withOpacity(0.4),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text('MASUK KE AKUN ANDA', style: AppTheme.titleMedium),
 
-//             // username field
-//             MyTextField(
-//               controller: userC,
-//               hintText: 'Username',
-//               obsecureText: false,
-//             ),
+              const SizedBox(height: 40),
 
-//             const SizedBox(height: 20),
+              // Fields
+              AuthTextField(
+                controller: _userC,
+                label: 'Username',
+                hint: 'Masukkan username',
+              ),
+              const SizedBox(height: 16),
+              AuthTextField(
+                controller: _passC,
+                label: 'Password',
+                hint: 'Masukkan password',
+                isPassword: true,
+              ),
 
-//             // password field
-//             MyTextField(
-//               controller: passC,
-//               hintText: 'Password',
-//               obsecureText: true,
-//             ),
+              // Error
+              if (_error.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppTheme.border),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.info_outline_rounded,
+                        size: 16,
+                        color: AppTheme.textSecondary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _error,
+                          style: AppTheme.cardSubtitle.copyWith(fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
 
-//             const SizedBox(height: 20),
+              const SizedBox(height: 28),
 
-//             // button login
-//             ElevatedButton(
-//               onPressed: _login,
-//               style: ElevatedButton.styleFrom(
-//                 backgroundColor: Colors.amber,
-//                 foregroundColor: Colors.white,
-//                 minimumSize: const Size(double.infinity, 54),
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(20),
-//                 ),
-//               ),
-//               child: Text(
-//                 'Login',
-//                 style: GoogleFonts.poppins(
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 18,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+              // Login button
+              GestureDetector(
+                onTap: _loading ? null : _login,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child:
+                        _loading
+                            ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                            : const Text(
+                              'Masuk',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Register link
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Belum punya akun?', style: AppTheme.cardSubtitle),
+                  const SizedBox(width: 6),
+                  GestureDetector(
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterPage(),
+                          ),
+                        ),
+                    child: const Text(
+                      'Daftar',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.textPrimary,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

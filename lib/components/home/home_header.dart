@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tugas2/utils/app_theme.dart';
 
+import '../../pages/group_profile_page.dart';
+
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -23,20 +25,27 @@ class HomeHeader extends StatelessWidget {
             const SizedBox(height: 10),
           ],
         ),
-        _buildAvatar(),
+        _buildAvatar(context),
       ],
     );
   }
 
-  Widget _buildAvatar() {
-    return Container(
-      width: 42,
-      height: 42,
-      decoration: BoxDecoration(
-        color: AppTheme.primary,
-        borderRadius: BorderRadius.circular(12),
+  Widget _buildAvatar(BuildContext context) {
+    return GestureDetector(
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const GroupInfoPage()),
+          ),
+      child: Container(
+        width: 42,
+        height: 42,
+        decoration: BoxDecoration(
+          color: AppTheme.primary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(Icons.people, color: Colors.white, size: 20),
       ),
-      child: const Icon(Icons.grid_view_rounded, color: Colors.white, size: 20),
     );
   }
 }
