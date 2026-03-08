@@ -25,6 +25,18 @@ class _CalculatorView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
+        elevation: 0,
+        title: const Text(
+          'Calculator',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
