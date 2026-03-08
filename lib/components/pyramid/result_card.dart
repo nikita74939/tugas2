@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/pyramid_result.dart';
+import '../../models/pyramid_result.dart';
 
 class ResultCard extends StatelessWidget {
   final String result;

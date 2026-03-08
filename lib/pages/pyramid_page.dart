@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../components/action_button.dart';
-import '../components/input_card.dart';
-import '../components/pyramid_painter.dart';
-import '../components/result_card.dart';
+import '../components/pyramid/action_button.dart';
+import '../components/pyramid/input_card.dart';
+import '../components/pyramid/pyramid_painter.dart';
+import '../components/pyramid/result_card.dart';
 import '../controllers/pyramid_controller.dart';
 import '../models/pyramid_result.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/field_counter_controller.dart';
-import '../components/summary_card.dart';
-import '../components/counter_field.dart';
+import '../components/counter/summary_card.dart';
+import '../components/counter/counter_field.dart';
 
 class FieldCounterPage extends StatefulWidget {
   const FieldCounterPage({super.key});

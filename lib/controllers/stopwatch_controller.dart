@@ -1,13 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
-class LapItem {
-  final int index;
-  final Duration total;
-  final Duration split;
-
-  LapItem({required this.index, required this.total, required this.split});
-}
+import '../models/lap_data.dart';
 
 class StopwatchController extends ChangeNotifier {
   Timer? _timer;
@@ -15,14 +8,14 @@ class StopwatchController extends ChangeNotifier {
   Duration _lastLap = Duration.zero;
   bool _isRunning = false;
   bool _isPaused = false;
-  final List<LapItem> _laps = [];
+  final List<LapData> _laps = [];
 
   Duration get elapsed => _elapsed;
   bool get isRunning => _isRunning;
   bool get isPaused => _isPaused;
   bool get canReset => _isPaused;
   bool get canLap => _isRunning;
-  List<LapItem> get laps => List.unmodifiable(_laps.reversed.toList());
+  List<LapData> get laps => List.unmodifiable(_laps.reversed.toList());
 
   void startPause() {
     if (_isRunning) {
@@ -63,7 +56,7 @@ class StopwatchController extends ChangeNotifier {
   void lap() {
     if (!canLap) return;
     final split = _elapsed - _lastLap;
-    _laps.add(LapItem(
+    _laps.add(LapData(
       index: _laps.length + 1,
       total: _elapsed,
       split: split,

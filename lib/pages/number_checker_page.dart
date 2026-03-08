@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/number_checker_controller.dart';
-import '../components/number_display.dart';
-import '../components/number_keypad.dart';
+import '../components/number checker/number_display.dart';
+import '../components/number checker/number_keypad.dart';
 
 class NumberCheckerPage extends StatefulWidget {
   const NumberCheckerPage({super.key});
