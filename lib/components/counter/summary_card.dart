@@ -62,7 +62,11 @@ class SummaryCard extends StatelessWidget {
                     color: AppTheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.numbers_rounded, color: Colors.white, size: 22),
+                  child: const Icon(
+                    Icons.numbers_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
               ],
             ),
@@ -89,10 +93,11 @@ class SummaryCard extends StatelessWidget {
   }
 
   Widget _divider() => Container(
-        width: 1,
-        height: 32,
-        color: AppTheme.border,
-      );
+    // margin: EdgeInsets.symmetric(horizontal: 4),
+    width: 1,
+    height: 32,
+    color: AppTheme.border,
+  );
 
   Widget _statChip(String label, String value) {
     return Expanded(
@@ -100,7 +105,10 @@ class SummaryCard extends StatelessWidget {
         children: [
           Text(label, style: AppTheme.cardSubtitle),
           const SizedBox(height: 4),
-          Text(value, style: AppTheme.cardTitle),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(value, style: AppTheme.cardTitle),
+          ),
         ],
       ),
     );
