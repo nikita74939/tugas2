@@ -55,10 +55,10 @@ class ResultCard extends StatelessWidget {
                       ? result
                       : '$result satuan${activeResult == PyramidResult.volume ? '³' : '²'}',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: isError ? 16 : 24,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.5,
-                    color: isError ? AppTheme.textPrimary : Colors.white,
+                    color: isError ? Colors.red : Colors.white,
                   ),
                   softWrap: true, // ← wrap ke baris berikutnya
                   overflow: TextOverflow.visible,
