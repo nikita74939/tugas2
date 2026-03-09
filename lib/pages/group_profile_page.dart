@@ -8,9 +8,9 @@ class GroupInfoPage extends StatelessWidget {
 
   static const _members = [
     GroupMember(name: 'Nikita', nim: '123230044'),
-    GroupMember(name: 'Fara Katty Sabila Al Kayyis', nim: '1232300**'),
-    GroupMember(name: 'Aisyah Nabila Nur Afifa', nim: '1232300**'),
-    GroupMember(name: 'Nadhifa Alya Syafinka', nim: '1232300**'),
+    GroupMember(name: 'Nadhifa Alya Syafinka', nim: '123230124'),
+    GroupMember(name: 'Aisyah Nabila Nur Afifa', nim: '123230213'),
+    GroupMember(name: 'Fara Katty Sabila Al Kayyis', nim: '123230232'),
   ];
 
   void _logout(BuildContext context) {
