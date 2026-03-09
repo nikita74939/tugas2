@@ -107,16 +107,23 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
                     showRemove: _ctrl.controllers.length > 1,
                     onRemove: () => setState(() => _ctrl.removeField(i)),
                     onChanged: () => setState(() {}),
+                    errorText: _ctrl.errorAt(i), // ← tambahkan ini
                   ),
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() => _ctrl.addField()),
-        backgroundColor: AppTheme.primary,
+        onPressed:
+            _ctrl.canAddField
+                ? () => setState(() => _ctrl.addField())
+                : null, // disabled
+        backgroundColor: _ctrl.canAddField ? AppTheme.primary : AppTheme.iconBg,
         elevation: 4,
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(
+          Icons.add,
+          color: _ctrl.canAddField ? Colors.white : AppTheme.textSecondary,
+        ),
       ),
     );
   }
