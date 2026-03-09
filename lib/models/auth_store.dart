@@ -10,14 +10,16 @@ class UserModel {
   });
 }
 
-/// Simple in-memory user store — tidak perlu database
 class AuthStore {
+  // Menggunakan private constructor untuk singleton
   AuthStore._();
   static final AuthStore instance = AuthStore._();
 
-  final List<UserModel> _users = [];
+  // Langsung masukkan akun admin ke dalam list saat inisialisasi
+  final List<UserModel> _users = [
+    const UserModel(username: 'admin', password: '1234', name: 'Administrator'),
+  ];
 
-  /// Login: return user jika cocok, null jika gagal
   UserModel? login(String username, String password) {
     try {
       return _users.firstWhere(
@@ -28,7 +30,6 @@ class AuthStore {
     }
   }
 
-  /// Register: return false jika username sudah ada
   bool register(String username, String password, String name) {
     final exists = _users.any((u) => u.username == username);
     if (exists) return false;
