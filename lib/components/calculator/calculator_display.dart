@@ -53,7 +53,7 @@ class CalculatorDisplay extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 40,
+                fontSize: !hasError ? 40 : 20,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -1.5,
                 color: hasError ? Colors.red.shade400 : AppTheme.textPrimary,

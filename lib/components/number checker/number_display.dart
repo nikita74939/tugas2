@@ -52,7 +52,7 @@ class NumberDisplay extends StatelessWidget {
           Container(
             padding:
                 hasResult
-                    ? const EdgeInsets.symmetric(horizontal: 20, vertical: 6)
+                    ? const EdgeInsets.symmetric(horizontal: 18, vertical: 6)
                     : EdgeInsets.zero,
             decoration:
                 hasResult
