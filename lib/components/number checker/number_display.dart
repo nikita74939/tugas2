@@ -50,20 +50,22 @@ class NumberDisplay extends StatelessWidget {
           ),
           // Result label
           Container(
-            padding: hasResult
-                ? const EdgeInsets.symmetric(horizontal: 14, vertical: 6)
-                : EdgeInsets.zero,
-            decoration: hasResult
-                ? BoxDecoration(
-                    color: AppTheme.iconBg,
-                    borderRadius: BorderRadius.circular(20),
-                  )
-                : null,
+            padding:
+                hasResult
+                    ? const EdgeInsets.symmetric(horizontal: 20, vertical: 6)
+                    : EdgeInsets.zero,
+            decoration:
+                hasResult
+                    ? BoxDecoration(
+                      color: AppTheme.iconBg,
+                      borderRadius: BorderRadius.circular(20),
+                    )
+                    : null,
             child: Text(
               result,
               textAlign: TextAlign.right,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.2,
                 color: hasResult ? AppTheme.textPrimary : Colors.transparent,
