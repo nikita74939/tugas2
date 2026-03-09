@@ -15,7 +15,6 @@ class NumberDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Map warna asli (hijau/merah) ke B&W: hasil valid → hitam, error → abu gelap
     final bool hasResult = result.isNotEmpty;
 
     return Container(

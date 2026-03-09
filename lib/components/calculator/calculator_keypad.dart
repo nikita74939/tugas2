@@ -28,7 +28,7 @@ class CalculatorKeypad extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Left: number grid + operators
+           
           Expanded(
             flex: 3,
             child: Column(
@@ -37,7 +37,7 @@ class CalculatorKeypad extends StatelessWidget {
                   .toList(),
             ),
           ),
-          // Right: DEL, -, +, =
+           
           Expanded(
             flex: 1,
             child: Column(

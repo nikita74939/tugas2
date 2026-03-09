@@ -33,6 +33,7 @@ class SummaryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             // Header row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +94,6 @@ class SummaryCard extends StatelessWidget {
   }
 
   Widget _divider() => Container(
-    // margin: EdgeInsets.symmetric(horizontal: 4),
     width: 1,
     height: 32,
     color: AppTheme.border,

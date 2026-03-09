@@ -32,6 +32,7 @@ class CalculatorDisplay extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+
           // Question
           Align(
             alignment: Alignment.centerLeft,
@@ -45,6 +46,7 @@ class CalculatorDisplay extends StatelessWidget {
               ),
             ),
           ),
+          
           // Answer
           Align(
             alignment: Alignment.centerRight,

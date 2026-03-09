@@ -16,7 +16,6 @@ class ClockDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Clock face in a white card
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 48),
           padding: const EdgeInsets.all(8),

@@ -64,6 +64,7 @@ class LapList extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
+
               // Split time
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,6 +89,7 @@ class LapList extends StatelessWidget {
                 ],
               ),
               const Spacer(),
+              
               // Total time
               Text(
                 formatDuration(lap.total),

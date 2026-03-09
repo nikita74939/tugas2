@@ -60,7 +60,7 @@ class ResultCard extends StatelessWidget {
                     letterSpacing: -0.5,
                     color: isError ? Colors.red : Colors.white,
                   ),
-                  softWrap: true, // ← wrap ke baris berikutnya
+                  softWrap: true, 
                   overflow: TextOverflow.visible,
                 ),
               ],

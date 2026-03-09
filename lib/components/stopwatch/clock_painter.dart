@@ -9,8 +9,7 @@ class ClockPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-
-    // Background circle — white with subtle shadow via outer ring
+ 
     canvas.drawCircle(
       center,
       radius,
@@ -21,8 +20,7 @@ class ClockPainter extends CustomPainter {
       radius * 0.93,
       Paint()..color = Colors.white,
     );
-
-    // Tick marks
+ 
     final tickPaint = Paint()..strokeCap = StrokeCap.round;
     for (int i = 0; i < 60; i++) {
       final angle = (i * 6) * pi / 180;
@@ -50,27 +48,25 @@ class ClockPainter extends CustomPainter {
       false,
       arcPaint,
     );
-
-    // Second hand
+ 
     final secAngle = sweepAngle - pi / 2;
     final handPaint = Paint()
       ..color = const Color(0xFF212121)
       ..strokeWidth = 1.8
       ..strokeCap = StrokeCap.round;
-    // Tail
+ 
     canvas.drawLine(
       center - Offset(cos(secAngle), sin(secAngle)) * radius * 0.2,
       center,
       handPaint..color = const Color(0xFF9E9E9E),
     );
-    // Hand
+    
     canvas.drawLine(
       center,
       center + Offset(cos(secAngle), sin(secAngle)) * radius * 0.70,
       handPaint..color = const Color(0xFF212121),
     );
-
-    // Center dot — outer ring
+ 
     canvas.drawCircle(center, 7, Paint()..color = const Color(0xFF212121));
     canvas.drawCircle(center, 4, Paint()..color = Colors.white);
   }
