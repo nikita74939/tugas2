@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../components/pyramid/action_button.dart';
 import '../components/pyramid/input_card.dart';
-import '../components/pyramid/pyramid_painter.dart';
 import '../components/pyramid/result_card.dart';
 import '../controllers/pyramid_controller.dart';
 import '../models/pyramid_result.dart';
 import '../utils/app_theme.dart';
+import '../utils/input_validator.dart';
 
 class PyramidPage extends StatefulWidget {
   const PyramidPage({super.key});
@@ -19,6 +19,17 @@ class _PyramidPageState extends State<PyramidPage> {
   final _heightController = TextEditingController();
   final _slantController = TextEditingController();
   final _controller = PyramidController();
+
+  bool _isValidField(TextEditingController c) {
+    final text = c.text.trim();
+    if (text.isEmpty) return false;
+    return !InputValidator.parseNumbers(text).hasErrors;
+  }
+
+  bool get _canArea =>
+      _isValidField(_baseController) && _isValidField(_slantController);
+  bool get _canVolume =>
+      _isValidField(_baseController) && _isValidField(_heightController);
 
   void _calculate(PyramidResult type) {
     setState(() {
@@ -111,7 +122,7 @@ class _PyramidPageState extends State<PyramidPage> {
           children: [
             // Ilustrasi Pyramid
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
                 color: AppTheme.surface,
                 borderRadius: BorderRadius.circular(16),
@@ -123,9 +134,10 @@ class _PyramidPageState extends State<PyramidPage> {
                   ),
                 ],
               ),
-              child: CustomPaint(
-                size: const Size(double.infinity, 160),
-                painter: PyramidPainter(),
+              child: Image.asset(
+                'assets/images/Square_Pyramid.png',
+                height: 160,
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(height: 16),
@@ -135,6 +147,7 @@ class _PyramidPageState extends State<PyramidPage> {
               baseController: _baseController,
               heightController: _heightController,
               slantController: _slantController,
+              onChanged: () => setState(() {}),
             ),
             const SizedBox(height: 16),
 
@@ -157,6 +170,7 @@ class _PyramidPageState extends State<PyramidPage> {
                     label: 'Luas Permukaan',
                     type: PyramidResult.area,
                     activeResult: _controller.activeResult,
+                    enabled: _canArea,
                     onTap: () => _calculate(PyramidResult.area),
                   ),
                 ),
@@ -166,6 +180,7 @@ class _PyramidPageState extends State<PyramidPage> {
                     label: 'Volume',
                     type: PyramidResult.volume,
                     activeResult: _controller.activeResult,
+                    enabled: _canVolume,
                     onTap: () => _calculate(PyramidResult.volume),
                   ),
                 ),

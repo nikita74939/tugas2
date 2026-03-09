@@ -35,30 +35,38 @@ class ResultCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isError ? 'Error' : resultLabel.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.2,
-                  color: isError ? AppTheme.textSecondary : Colors.white60,
+          Expanded(
+            // ← biar teks tidak overflow ke kanan
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isError ? 'Error' : resultLabel.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    color: isError ? AppTheme.textSecondary : Colors.white60,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                isError ? result : '$result satuan${activeResult == PyramidResult.volume ? '³' : '²'}',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                  color: isError ? AppTheme.textPrimary : Colors.white,
+                const SizedBox(height: 4),
+                Text(
+                  isError
+                      ? result
+                      : '$result satuan${activeResult == PyramidResult.volume ? '³' : '²'}',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                    color: isError ? AppTheme.textPrimary : Colors.white,
+                  ),
+                  softWrap: true, // ← wrap ke baris berikutnya
+                  overflow: TextOverflow.visible,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          const SizedBox(width: 12),
           Container(
             width: 40,
             height: 40,
