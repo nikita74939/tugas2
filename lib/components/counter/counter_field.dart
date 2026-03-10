@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 
+// Widget input satu baris data counter — mendukung banyak angka sekaligus
 class CounterField extends StatelessWidget {
-  final int index;
+  final int index;                      // Posisi field (untuk tampilan nomor urut)
   final TextEditingController controller;
   final FocusNode focusNode;
-  final bool showRemove;
-  final VoidCallback onRemove;
-  final VoidCallback onChanged;
-  final String? errorText;
+  final bool showRemove;                // Tombol hapus hanya muncul jika ada lebih dari satu field
+  final VoidCallback onRemove;          // Dipanggil saat user menekan tombol hapus
+  final VoidCallback onChanged;         // Dipanggil setiap kali isi field berubah
+  final String? errorText;              // Jika tidak null, banner error ditampilkan di bawah field
 
   const CounterField({
     super.key,
@@ -27,7 +28,8 @@ class CounterField extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(
         children: [
-          // Field utama
+
+          // Field utama: nomor urut + input teks + tombol hapus
           Container(
             decoration: BoxDecoration(
               color: AppTheme.surface,
@@ -43,7 +45,8 @@ class CounterField extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nomor field
+                
+                // Badge nomor urut (index + 1 agar dimulai dari 1, bukan 0)
                 Container(
                   width: 44,
                   padding: const EdgeInsets.only(top: 14),
@@ -66,13 +69,14 @@ class CounterField extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Input
+
+                // Input multiline — user bisa ketik banyak angka dipisah spasi/koma
                 Expanded(
                   child: TextField(
                     controller: controller,
                     focusNode: focusNode,
                     keyboardType: TextInputType.multiline,
-                    maxLines: null,
+                    maxLines: null, // Tinggi field menyesuaikan isi teks
                     onChanged: (_) => onChanged(),
                     style: AppTheme.cardTitle.copyWith(fontSize: 14),
                     decoration: InputDecoration(
@@ -87,7 +91,8 @@ class CounterField extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Tombol hapus
+
+                // Tombol hapus — hanya tampil jika showRemove = true
                 if (showRemove)
                   GestureDetector(
                     onTap: onRemove,
@@ -110,7 +115,7 @@ class CounterField extends StatelessWidget {
             ),
           ),
 
-          // Error banner
+          // Banner error — hanya muncul jika errorText tidak null
           if (errorText != null) ...[
             const SizedBox(height: 6),
             Container(
@@ -122,11 +127,7 @@ class CounterField extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.error_rounded,
-                    color: Colors.white,
-                    size: 15,
-                  ),
+                  const Icon(Icons.error_rounded, color: Colors.white, size: 15),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(

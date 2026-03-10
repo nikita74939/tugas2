@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 
+// Widget kartu ringkasan statistik dari daftar angka yang diinput user
 class SummaryCard extends StatelessWidget {
-  final List<double> numbers;
-  final String Function(double) fmt;
+  final List<double> numbers; // Semua angka dari seluruh counter field
+  final String Function(double) fmt; // Fungsi format angka (misal: 1000 → "1.000")
 
   const SummaryCard({super.key, required this.numbers, required this.fmt});
 
   @override
   Widget build(BuildContext context) {
+    // Hitung statistik langsung di build — aman karena numbers dari parent
     final count = numbers.length;
     final sum = numbers.fold(0.0, (a, b) => a + b);
     final avg = count > 0 ? sum / count : 0.0;
@@ -34,7 +36,7 @@ class SummaryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // Header row
+            // Header: total count di kiri, ikon di kanan
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -71,6 +73,8 @@ class SummaryCard extends StatelessWidget {
                 ),
               ],
             ),
+
+            // Baris statistik hanya ditampilkan jika ada angka yang diinput
             if (count > 0) ...[
               const SizedBox(height: 16),
               Container(height: 1, color: AppTheme.border),
@@ -93,12 +97,14 @@ class SummaryCard extends StatelessWidget {
     );
   }
 
+  // Garis pemisah vertikal antar stat chip
   Widget _divider() => Container(
     width: 1,
     height: 32,
     color: AppTheme.border,
   );
 
+  // Satu kolom statistik: label di atas, nilai di bawah
   Widget _statChip(String label, String value) {
     return Expanded(
       child: Column(
