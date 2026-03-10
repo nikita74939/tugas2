@@ -120,10 +120,10 @@ lib/
 Aplikasi menggunakan pola arsitektur **MVC (Model-View-Controller)** yang dipadukan dengan **Provider** untuk state management reaktif pada fitur yang membutuhkannya.
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌──────────────┐
+┌─────────────┐       ┌──────────────┐     ┌──────────────┐
 │    Pages     │────▶│  Controllers │────▶│    Models    │
-│  (UI Layer)  │◀────│ (Logic Layer)│     │ (Data Layer) │
-└─────────────┘     └──────────────┘     └──────────────┘
+│  (UI Layer)  │◀────│ (Logic Layer)│      │ (Data Layer) │
+└─────────────┘       └──────────────┘     └──────────────┘
        │                                        │
        ▼                                        ▼
 ┌─────────────┐                        ┌──────────────┐
