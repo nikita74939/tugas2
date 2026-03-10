@@ -1,17 +1,21 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 
+// jenis tampilan tombol kalkulator
 enum ButtonVariant { normal, operator, action, equals }
 
+// widget tombol
 class MyButton extends StatelessWidget {
   final String buttonText;
-  final ButtonVariant variant;
-  final VoidCallback? buttonTapped;
+  final ButtonVariant variant; // warna & ukuran tombol
+  final VoidCallback? buttonTapped; 
 
   const MyButton({
     super.key,
     required this.buttonText,
-    this.variant = ButtonVariant.normal,
+    this.variant = ButtonVariant.normal, // default: tombol angka biasa
     this.buttonTapped,
   });
 
@@ -27,6 +31,8 @@ class MyButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(14),
+
+          // shadow lebih tebal untuk tombol "="
           boxShadow: variant == ButtonVariant.equals
               ? [
                   BoxShadow(
@@ -43,6 +49,8 @@ class MyButton extends StatelessWidget {
                   )
                 ],
         ),
+
+        // text button
         child: Center(
           child: Text(
             buttonText,
@@ -58,27 +66,29 @@ class MyButton extends StatelessWidget {
     );
   }
 
+  // bg berdasarkan jenis tombol
   Color _backgroundColor() {
     switch (variant) {
       case ButtonVariant.equals:
-        return AppTheme.primary;       // black
+        return AppTheme.primary;      
       case ButtonVariant.operator:
-        return AppTheme.iconBg;        // light grey
+        return AppTheme.iconBg;        
       case ButtonVariant.action:
-        return AppTheme.iconBg;        // light grey
+        return AppTheme.iconBg;        
       case ButtonVariant.normal:
-        return AppTheme.surface;       // white
+        return AppTheme.surface;       
     }
   }
 
+  // warna teks
   Color _foregroundColor() {
     switch (variant) {
       case ButtonVariant.equals:
         return Colors.white;
       case ButtonVariant.operator:
-        return AppTheme.textPrimary;   // black text on grey
+        return AppTheme.textPrimary;  
       case ButtonVariant.action:
-        return AppTheme.textSecondary; // grey text (DEL etc)
+        return AppTheme.textSecondary; 
       case ButtonVariant.normal:
         return AppTheme.textPrimary;
     }

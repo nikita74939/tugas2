@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 
+// layar kalkulator
 class CalculatorDisplay extends StatelessWidget {
   final String question;
   final String answer;

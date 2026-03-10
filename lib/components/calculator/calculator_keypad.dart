@@ -4,10 +4,12 @@ import 'calculator_button.dart';
 import '../../controllers/calculator_controller.dart';
 import '../../utils/calculator_util.dart';
 
+// Widget keypad kalkulator — menyusun semua tombol dalam layout dua kolom
 class CalculatorKeypad extends StatelessWidget {
   const CalculatorKeypad({super.key});
 
-  // Map label → variant
+  // Menentukan variant tombol berdasarkan labelnya
+  // Urutan pengecekan penting: '=' → action → operator → normal
   ButtonVariant _variantFor(String label) {
     if (label == '=') return ButtonVariant.equals;
     if (label == 'DEL' || label == 'AC') return ButtonVariant.action;
@@ -17,6 +19,7 @@ class CalculatorKeypad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Gunakan read() karena keypad tidak perlu rebuild saat state berubah
     final ctrl = context.read<CalculatorController>();
 
     return Container(
@@ -28,7 +31,8 @@ class CalculatorKeypad extends StatelessWidget {
       ),
       child: Row(
         children: [
-           
+
+          // Kolom kiri (flex 3): tombol angka & AC dalam grid dari leftButtons
           Expanded(
             flex: 3,
             child: Column(
@@ -37,12 +41,15 @@ class CalculatorKeypad extends StatelessWidget {
                   .toList(),
             ),
           ),
-           
+
+          // Kolom kanan (flex 1): DEL, -, +, dan tombol "=" yang lebih tinggi
           Expanded(
             flex: 1,
             child: Column(
               children: [
                 ...['DEL', '-', '+'].map((l) => _buildSingle(context, l)),
+                
+                // "=" diberi flex 2 agar tampilannya dua kali lebih tinggi dari tombol lain
                 Expanded(
                   flex: 2,
                   child: MyButton(
@@ -59,6 +66,7 @@ class CalculatorKeypad extends StatelessWidget {
     );
   }
 
+  // Membangun satu baris tombol dari list label (dipakai untuk grid kolom kiri)
   Widget _buildRow(BuildContext context, List<String> labels) {
     final ctrl = context.read<CalculatorController>();
     return Expanded(
@@ -76,6 +84,7 @@ class CalculatorKeypad extends StatelessWidget {
     );
   }
 
+  // Membangun satu tombol tunggal (dipakai untuk kolom kanan: DEL, -, +)
   Widget _buildSingle(BuildContext context, String label) {
     final ctrl = context.read<CalculatorController>();
     return Expanded(
