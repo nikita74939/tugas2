@@ -5,6 +5,7 @@ import '../../components/auth/auth_text_field.dart';
 import 'register_page.dart';
 import 'home_page.dart';
 
+// Halaman login — validasi input, autentikasi, dan navigasi ke HomePage
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -15,8 +16,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _userC = TextEditingController();
   final _passC = TextEditingController();
-  String _error = '';
-  bool _loading = false;
+  String _error = '';    // Pesan error ditampilkan di bawah field jika tidak kosong
+  bool _loading = false; // Saat true, tombol login disabled dan tampil loading spinner
 
   @override
   void dispose() {
@@ -29,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     final username = _userC.text.trim();
     final password = _passC.text;
 
+    // Validasi awal sebelum memanggil AuthStore
     if (username.isEmpty || password.isEmpty) {
       setState(() => _error = 'Username dan password tidak boleh kosong.');
       return;
@@ -39,12 +41,14 @@ class _LoginPageState extends State<LoginPage> {
       _error = '';
     });
 
-    // Simulasi delay singkat
+    // Delay 400ms untuk simulasi proses autentikasi agar terasa lebih natural
     Future.delayed(const Duration(milliseconds: 400), () {
       final user = AuthStore.instance.login(username, password);
+      // Cek mounted agar tidak setState setelah widget dihapus dari tree
       if (!mounted) return;
 
       if (user != null) {
+        // pushReplacement agar LoginPage dihapus dari stack — tidak bisa di-back
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomePage()),
@@ -70,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 60),
 
-              // Icon header
+              // Ikon app di atas judul
               Container(
                 width: 56,
                 height: 56,
@@ -86,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 24),
 
-              // Title
+              // Judul "Selamat Datang" — "Datang" dibuat pudar sebagai aksen visual
               Text('Selamat', style: AppTheme.titleLarge),
               Text(
                 'Datang',
@@ -96,10 +100,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 6),
               Text('MASUK KE AKUN ANDA', style: AppTheme.titleMedium),
-
               const SizedBox(height: 40),
 
-              // Fields
+              // Input field username dan password
               AuthTextField(
                 controller: _userC,
                 label: 'Username',
@@ -113,14 +116,11 @@ class _LoginPageState extends State<LoginPage> {
                 isPassword: true,
               ),
 
-              // Error
+              // Banner error — hanya muncul jika _error tidak kosong
               if (_error.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(10),
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 28),
 
-              // Login button
+              // Tombol login — disabled saat loading agar tidak double submit
               GestureDetector(
                 onTap: _loading ? null : _login,
                 child: Container(
@@ -165,45 +165,42 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   child: Center(
-                    child:
-                        _loading
-                            ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                            : const Text(
-                              'Masuk',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.2,
-                              ),
+                    // Tampilkan spinner saat loading, teks "Masuk" saat idle
+                    child: _loading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
                             ),
+                          )
+                        : const Text(
+                            'Masuk',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.2,
+                            ),
+                          ),
                   ),
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              // Register link
+              // Link ke halaman registrasi
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Belum punya akun?', style: AppTheme.cardSubtitle),
                   const SizedBox(width: 6),
                   GestureDetector(
-                    onTap:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const RegisterPage(),
-                          ),
-                        ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RegisterPage()),
+                    ),
                     child: const Text(
                       'Daftar',
                       style: TextStyle(

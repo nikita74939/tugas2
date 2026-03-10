@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
+// Pusat definisi tema aplikasi — semua warna, teks, dan dekorasi ada di sini
+// Gunakan nilai dari class ini agar tampilan konsisten di seluruh app
 class AppTheme {
-  // Colors
-  static const Color background = Color(0xFFF5F5F5);
-  static const Color surface = Colors.white;
-  static const Color primary = Colors.black;
+  // Warna utama
+  static const Color background = Color(0xFFF5F5F5); // Abu sangat muda — latar halaman
+  static const Color surface = Colors.white;           // Putih — latar kartu & field
+  static const Color primary = Colors.black;           // Hitam — tombol utama & aksen
   static const Color textPrimary = Colors.black;
-  static const Color textSecondary = Color(0xFF9E9E9E);
-  static const Color border = Color(0xFFE0E0E0);
-  static const Color iconBg = Color(0xFFF0F0F0);
+  static const Color textSecondary = Color(0xFF9E9E9E); // Abu — teks placeholder & label
+  static const Color border = Color(0xFFE0E0E0);        // Abu muda — garis pembatas
+  static const Color iconBg = Color(0xFFF0F0F0);        // Abu — background ikon & badge
 
-  // Text Styles
+  // Gaya teks — gunakan .copyWith() jika perlu variasi kecil
   static const TextStyle titleLarge = TextStyle(
     fontSize: 26,
     fontWeight: FontWeight.w800,
@@ -22,7 +24,7 @@ class AppTheme {
     fontSize: 13,
     fontWeight: FontWeight.w500,
     color: textSecondary,
-    letterSpacing: 1.2,
+    letterSpacing: 1.2, // Spasi lebar untuk label uppercase
   );
 
   static const TextStyle cardTitle = TextStyle(
@@ -38,7 +40,7 @@ class AppTheme {
     color: textSecondary,
   );
 
-  // Decorations
+  // Dekorasi kartu standar — tidak const karena withOpacity tidak bisa const
   static BoxDecoration cardDecoration = BoxDecoration(
     color: surface,
     borderRadius: BorderRadius.circular(16),
@@ -51,6 +53,7 @@ class AppTheme {
     ],
   );
 
+  // Dekorasi background ikon — tanpa shadow, lebih ringan dari cardDecoration
   static BoxDecoration iconDecoration = BoxDecoration(
     color: iconBg,
     borderRadius: BorderRadius.circular(12),

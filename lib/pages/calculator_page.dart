@@ -5,11 +5,13 @@ import '../../utils/app_theme.dart';
 import '../components/calculator/calculator_display.dart';
 import '../components/calculator/calculator_keypad.dart';
 
+// Halaman kalkulator — membungkus view dengan ChangeNotifierProvider
 class CalculatorPage extends StatelessWidget {
   const CalculatorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Provider dibuat di sini agar CalculatorController hanya hidup selama halaman ini aktif
     return ChangeNotifierProvider(
       create: (_) => CalculatorController(),
       child: const _CalculatorView(),
@@ -17,11 +19,13 @@ class CalculatorPage extends StatelessWidget {
   }
 }
 
+// View terpisah dari provider agar context.watch bisa mengakses controller di atasnya
 class _CalculatorView extends StatelessWidget {
   const _CalculatorView();
 
   @override
   Widget build(BuildContext context) {
+    // watch() — view rebuild otomatis setiap kali controller memanggil notifyListeners()
     final ctrl = context.watch<CalculatorController>();
 
     return Scaffold(
@@ -29,6 +33,7 @@ class _CalculatorView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppTheme.background,
         elevation: 0,
+        // Tombol back custom agar tampilan konsisten dengan desain app
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
@@ -55,6 +60,7 @@ class _CalculatorView extends StatelessWidget {
       ),
       body: Column(
         children: [
+          // Display (flex 1) lebih kecil dari keypad (flex 2) — prioritas area input
           Expanded(
             flex: 1,
             child: CalculatorDisplay(

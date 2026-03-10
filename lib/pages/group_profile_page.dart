@@ -3,9 +3,11 @@ import '../models/group_member.dart';
 import '../utils/app_theme.dart';
 import 'login_page.dart';
 
+// Halaman info kelompok — menampilkan daftar anggota dan tombol logout
 class GroupInfoPage extends StatelessWidget {
   const GroupInfoPage({super.key});
 
+  // Data anggota di-hardcode sebagai konstanta — tidak perlu dari API/database
   static const _members = [
     GroupMember(name: 'Nikita', nim: '123230044'),
     GroupMember(name: 'Nadhifa Alya Syafinka', nim: '123230124'),
@@ -13,6 +15,8 @@ class GroupInfoPage extends StatelessWidget {
     GroupMember(name: 'Fara Katty Sabila Al Kayyis', nim: '123230232'),
   ];
 
+  // Logout: hapus semua route di stack lalu arahkan ke LoginPage
+  // (route) => false memastikan user tidak bisa kembali dengan tombol back
   void _logout(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
@@ -58,7 +62,7 @@ class GroupInfoPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            // Header card
+            // Header kartu hitam — menampilkan nama mata kuliah dan kelas
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -118,17 +122,17 @@ class GroupInfoPage extends StatelessWidget {
             const SizedBox(height: 20),
             Text('DAFTAR ANGGOTA', style: AppTheme.titleMedium),
             const SizedBox(height: 12),
-            // Member list
+            // Daftar anggota dalam ListView agar bisa scroll jika anggota banyak
             Expanded(
               child: ListView.separated(
                 itemCount: _members.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 10),
-                itemBuilder:
-                    (context, i) => _MemberCard(member: _members[i], index: i),
+                itemBuilder: (context, i) =>
+                    _MemberCard(member: _members[i], index: i),
               ),
             ),
             const SizedBox(height: 16),
-            // Logout button
+            // Tombol logout di bawah layar — selalu terlihat tanpa scroll
             GestureDetector(
               onTap: () => _logout(context),
               child: Container(
@@ -146,16 +150,12 @@ class GroupInfoPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.logout_rounded,
-                      color: AppTheme.textPrimary,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
+                    Icon(Icons.logout_rounded, color: AppTheme.textPrimary, size: 18),
+                    SizedBox(width: 8),
+                    Text(
                       'Logout',
                       style: TextStyle(
                         fontSize: 15,
@@ -176,6 +176,7 @@ class GroupInfoPage extends StatelessWidget {
   }
 }
 
+// Widget kartu satu anggota — nomor urut, nama, dan NIM
 class _MemberCard extends StatelessWidget {
   final GroupMember member;
   final int index;
@@ -199,6 +200,7 @@ class _MemberCard extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Badge nomor urut (index + 1 agar mulai dari 1)
           Container(
             width: 44,
             height: 44,

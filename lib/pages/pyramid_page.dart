@@ -7,6 +7,7 @@ import '../models/pyramid_result.dart';
 import '../utils/app_theme.dart';
 import '../utils/input_validator.dart';
 
+// Halaman kalkulasi limas segiempat — luas permukaan dan volume
 class PyramidPage extends StatefulWidget {
   const PyramidPage({super.key});
 
@@ -20,12 +21,14 @@ class _PyramidPageState extends State<PyramidPage> {
   final _slantController = TextEditingController();
   final _controller = PyramidController();
 
+  // Field valid jika tidak kosong dan tidak mengandung karakter non-angka
   bool _isValidField(TextEditingController c) {
     final text = c.text.trim();
     if (text.isEmpty) return false;
     return !InputValidator.parseNumbers(text).hasErrors;
   }
 
+  // Luas permukaan butuh alas + apotema; volume butuh alas + tinggi
   bool get _canArea =>
       _isValidField(_baseController) && _isValidField(_slantController);
   bool get _canVolume =>
@@ -42,6 +45,7 @@ class _PyramidPageState extends State<PyramidPage> {
     });
   }
 
+  // Reset semua field dan hasil kalkulasi sekaligus
   void _reset() {
     setState(() {
       _baseController.clear();
@@ -90,6 +94,7 @@ class _PyramidPageState extends State<PyramidPage> {
         ),
         title: const Text('Pyramid', style: AppTheme.titleLarge),
         actions: [
+          // Tombol reset di AppBar — membersihkan semua input dan hasil
           GestureDetector(
             onTap: _reset,
             child: Container(
@@ -120,7 +125,7 @@ class _PyramidPageState extends State<PyramidPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Ilustrasi Pyramid
+            // Ilustrasi limas — membantu user memahami variabel a, t, dan s
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
@@ -142,7 +147,7 @@ class _PyramidPageState extends State<PyramidPage> {
             ),
             const SizedBox(height: 16),
 
-            // Input Fields
+            // onChanged: () => setState({}) agar _canArea & _canVolume dievaluasi ulang
             InputCard(
               baseController: _baseController,
               heightController: _heightController,
@@ -151,7 +156,7 @@ class _PyramidPageState extends State<PyramidPage> {
             ),
             const SizedBox(height: 16),
 
-            // Result Card
+            // ResultCard hanya ditampilkan setelah ada hasil kalkulasi
             if (_controller.hasResult) ...[
               ResultCard(
                 result: _controller.result,
@@ -162,7 +167,7 @@ class _PyramidPageState extends State<PyramidPage> {
               const SizedBox(height: 16),
             ],
 
-            // Buttons
+            // Dua tombol kalkulasi — enabled/disabled berdasarkan validitas field
             Row(
               children: [
                 Expanded(

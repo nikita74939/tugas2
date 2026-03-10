@@ -6,7 +6,9 @@ import 'package:tugas2/pages/number_checker_page.dart';
 import 'package:tugas2/pages/pyramid_page.dart';
 import 'package:tugas2/pages/field_counter_page.dart';
 
+// Controller halaman utama — menyimpan daftar fitur dan logika navigasi
 class HomeController {
+  // Daftar menu aplikasi — tambah fitur baru cukup di sini, UI otomatis menyesuaikan
   static const List<MenuItemModel> menus = [
     MenuItemModel(
       icon: Icons.calculate_rounded,
@@ -40,6 +42,7 @@ class HomeController {
     ),
   ];
 
+  // Navigasi ke halaman tujuan — terpusat di sini agar mudah diganti (misal: pakai named routes)
   static void navigateTo(BuildContext context, Widget page) {
     Navigator.push(
       context,

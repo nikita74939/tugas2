@@ -3,6 +3,7 @@ import '../../utils/app_theme.dart';
 import '../../models/auth_store.dart';
 import '../../components/auth/auth_text_field.dart';
 
+// Halaman registrasi — validasi input, buat akun baru, lalu kembali ke login
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -15,8 +16,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _userC = TextEditingController();
   final _passC = TextEditingController();
   final _confirmC = TextEditingController();
-  String _error = '';
-  bool _loading = false;
+  String _error = '';    // Pesan error validasi — ditampilkan di atas tombol daftar
+  bool _loading = false; // Saat true, tombol disabled dan tampil spinner
 
   @override
   void dispose() {
@@ -33,6 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final password = _passC.text;
     final confirm = _confirmC.text;
 
+    // Validasi bertahap — berhenti di error pertama yang ditemukan
     if (name.isEmpty || username.isEmpty || password.isEmpty || confirm.isEmpty) {
       setState(() => _error = 'Semua field harus diisi.');
       return;
@@ -48,11 +50,14 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() { _loading = true; _error = ''; });
 
+    // Delay 400ms untuk simulasi proses registrasi agar terasa lebih natural
     Future.delayed(const Duration(milliseconds: 400), () {
       final success = AuthStore.instance.register(username, password, name);
+      // Guard mounted agar tidak setState setelah widget dihapus dari tree
       if (!mounted) return;
 
       if (success) {
+        // Tampilkan snackbar konfirmasi lalu kembali ke LoginPage
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('Akun berhasil dibuat! Silakan login.'),
@@ -61,8 +66,9 @@ class _RegisterPageState extends State<RegisterPage> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         );
-        Navigator.pop(context); // kembali ke login
+        Navigator.pop(context); // Kembali ke login — tidak perlu pushReplacement karena stack sudah benar
       } else {
+        // Gagal = username sudah dipakai (AuthStore.register return false)
         setState(() {
           _loading = false;
           _error = 'Username "$username" sudah digunakan.';
@@ -83,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               const SizedBox(height: 60),
 
-              // Back + icon
+              // Tombol back manual karena halaman ini tidak pakai AppBar
               Row(
                 children: [
                   GestureDetector(
@@ -109,7 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 24),
 
-              // Title
+              // Judul "Buat Akun" — "Akun" dibuat pudar sebagai aksen visual
               Text('Buat', style: AppTheme.titleLarge),
               Text(
                 'Akun',
@@ -119,37 +125,18 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 6),
               Text('DAFTAR AKUN BARU', style: AppTheme.titleMedium),
-
               const SizedBox(height: 36),
 
-              // Fields
-              AuthTextField(
-                controller: _nameC,
-                label: 'Nama Lengkap',
-                hint: 'Masukkan nama lengkap',
-              ),
+              // Input field registrasi
+              AuthTextField(controller: _nameC, label: 'Nama Lengkap', hint: 'Masukkan nama lengkap'),
               const SizedBox(height: 14),
-              AuthTextField(
-                controller: _userC,
-                label: 'Username',
-                hint: 'Buat username unik',
-              ),
+              AuthTextField(controller: _userC, label: 'Username', hint: 'Buat username unik'),
               const SizedBox(height: 14),
-              AuthTextField(
-                controller: _passC,
-                label: 'Password',
-                hint: 'Minimal 4 karakter',
-                isPassword: true,
-              ),
+              AuthTextField(controller: _passC, label: 'Password', hint: 'Minimal 4 karakter', isPassword: true),
               const SizedBox(height: 14),
-              AuthTextField(
-                controller: _confirmC,
-                label: 'Konfirmasi Password',
-                hint: 'Ulangi password',
-                isPassword: true,
-              ),
+              AuthTextField(controller: _confirmC, label: 'Konfirmasi Password', hint: 'Ulangi password', isPassword: true),
 
-              // Error
+              // Banner error — hanya muncul jika _error tidak kosong
               if (_error.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Container(
@@ -173,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 28),
 
-              // Register button
+              // Tombol daftar — disabled saat loading untuk mencegah double submit
               GestureDetector(
                 onTap: _loading ? null : _register,
                 child: Container(
@@ -191,6 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ],
                   ),
                   child: Center(
+                    // Spinner saat loading, teks "Daftar" saat idle
                     child: _loading
                         ? const SizedBox(
                             width: 20, height: 20,
@@ -211,7 +199,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               const SizedBox(height: 20),
 
-              // Login link
+              // Link kembali ke login — pakai Navigator.pop karena LoginPage sudah ada di stack
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

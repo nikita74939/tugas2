@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tugas2/utils/app_theme.dart';
-
 import '../../pages/group_profile_page.dart';
 
+// Widget header halaman utama — menampilkan judul app dan tombol info grup
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -12,6 +12,7 @@ class HomeHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Judul "Math Tools" — "Tools" dibuat lebih pudar sebagai aksen visual
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -30,13 +31,13 @@ class HomeHeader extends StatelessWidget {
     );
   }
 
+  // Tombol avatar — navigasi ke halaman info anggota grup
   Widget _buildAvatar(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const GroupInfoPage()),
-          ),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const GroupInfoPage()),
+      ),
       child: Container(
         width: 42,
         height: 42,

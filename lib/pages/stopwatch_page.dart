@@ -6,11 +6,13 @@ import '../components/stopwatch/lap_list.dart';
 import '../components/stopwatch/control_buttons.dart';
 import '../utils/app_theme.dart';
 
+// Halaman stopwatch — membungkus view dengan ChangeNotifierProvider
 class StopwatchPage extends StatelessWidget {
   const StopwatchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Controller dibuat di sini agar otomatis di-dispose saat halaman ditutup
     return ChangeNotifierProvider(
       create: (_) => StopwatchController(),
       child: const _StopwatchView(),
@@ -18,11 +20,13 @@ class StopwatchPage extends StatelessWidget {
   }
 }
 
+// View terpisah dari provider agar context.watch bisa mengakses controller di atasnya
 class _StopwatchView extends StatelessWidget {
   const _StopwatchView();
 
   @override
   Widget build(BuildContext context) {
+    // watch() — seluruh view rebuild setiap tick timer (setiap 10ms)
     final ctrl = context.watch<StopwatchController>();
 
     return Scaffold(
@@ -57,11 +61,13 @@ class _StopwatchView extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 16),
+          // Jam analog + teks digital — elapsed untuk jarum, formattedTime untuk teks
           ClockDisplay(
             elapsed: ctrl.elapsed,
             formattedTime: ctrl.formatDuration(ctrl.elapsed),
           ),
           const SizedBox(height: 16),
+          // LapList mengisi sisa ruang layar di antara jam dan tombol kontrol
           Expanded(
             child: LapList(
               laps: ctrl.laps,

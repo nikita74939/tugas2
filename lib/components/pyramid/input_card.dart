@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/input_validator.dart';
 
+// Widget kartu input untuk kalkulasi limas — mengelola validasi tiap field secara mandiri
 class InputCard extends StatefulWidget {
-  final TextEditingController baseController;
-  final TextEditingController heightController;
-  final TextEditingController slantController;
-  final VoidCallback? onChanged;
+  final TextEditingController baseController;    // Sisi alas (a)
+  final TextEditingController heightController;  // Tinggi (t)
+  final TextEditingController slantController;   // Apotema sisi (s)
+  final VoidCallback? onChanged; // Dipanggil setiap kali input berubah — untuk update tombol di parent
 
   const InputCard({
     super.key,
@@ -21,6 +22,7 @@ class InputCard extends StatefulWidget {
 }
 
 class _InputCardState extends State<InputCard> {
+  // Pesan error per field — null berarti tidak ada error
   String? _baseError;
   String? _heightError;
   String? _slantError;
@@ -28,18 +30,21 @@ class _InputCardState extends State<InputCard> {
   bool _hasError(String? e) => e != null;
   bool _isEmpty(TextEditingController c) => c.text.trim().isEmpty;
 
-  /// Apakah field valid (tidak kosong dan tidak error)
+  // Field valid jika tidak kosong dan tidak ada error
   bool _isValid(TextEditingController c, String? error) =>
       !_isEmpty(c) && !_hasError(error);
 
+  // Luas permukaan butuh alas + apotema sisi (tidak butuh tinggi)
   bool get canCalculateArea =>
       _isValid(widget.baseController, _baseError) &&
       _isValid(widget.slantController, _slantError);
 
+  // Volume butuh alas + tinggi (tidak butuh apotema sisi)
   bool get canCalculateVolume =>
       _isValid(widget.baseController, _baseError) &&
       _isValid(widget.heightController, _heightError);
 
+  // Validasi satu field: kosong = hapus error, ada isi = cek via InputValidator
   void _validate(TextEditingController controller, void Function(String?) setError) {
     final text = controller.text;
     if (text.isEmpty) {
@@ -51,6 +56,7 @@ class _InputCardState extends State<InputCard> {
     widget.onChanged?.call();
   }
 
+  // Dekorasi input yang dipakai bersama oleh semua field
   static InputDecoration _decoration(String hint) => InputDecoration(
         filled: true,
         fillColor: AppTheme.iconBg,
@@ -58,6 +64,7 @@ class _InputCardState extends State<InputCard> {
           borderRadius: BorderRadius.all(Radius.circular(10)),
           borderSide: BorderSide.none,
         ),
+        // Border biru tipis hanya muncul saat field sedang fokus
         focusedBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           borderSide: BorderSide(
@@ -73,6 +80,7 @@ class _InputCardState extends State<InputCard> {
         ),
       );
 
+  // Membangun satu field input lengkap dengan label, input, dan banner error
   Widget _buildInput(
     String label,
     TextEditingController controller,
@@ -93,6 +101,7 @@ class _InputCardState extends State<InputCard> {
           decoration: _decoration(hint),
           onChanged: (_) => setState(() => _validate(controller, setError)),
         ),
+        // Banner error hanya muncul jika errorText tidak null
         if (errorText != null) ...[
           const SizedBox(height: 6),
           Container(

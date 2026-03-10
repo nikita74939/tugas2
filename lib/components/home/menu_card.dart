@@ -3,15 +3,17 @@ import 'package:tugas2/models/menu_item_model.dart';
 import 'package:tugas2/utils/app_theme.dart';
 import 'package:tugas2/controllers/home_controller.dart';
 
+// Widget kartu menu — menampilkan satu fitur/tool yang bisa dinavigasi
 class MenuCard extends StatelessWidget {
-  final MenuItemModel item;
-  final int index;
+  final MenuItemModel item;  // Data menu: label, subtitle, icon, dan halaman tujuan
+  final int index;           // Posisi kartu di list (bisa dipakai untuk animasi/urutan)
 
   const MenuCard({super.key, required this.item, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // Navigasi ke halaman tujuan sesuai data menu
       onTap: () => HomeController.navigateTo(context, item.page),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -28,6 +30,7 @@ class MenuCard extends StatelessWidget {
     );
   }
 
+  // Ikon fitur dalam kotak abu muda
   Widget _buildIcon() {
     return Container(
       width: 50,
@@ -37,6 +40,7 @@ class MenuCard extends StatelessWidget {
     );
   }
 
+  // Nama dan deskripsi singkat fitur
   Widget _buildLabel() {
     return Expanded(
       child: Column(
@@ -50,6 +54,7 @@ class MenuCard extends StatelessWidget {
     );
   }
 
+  // Tombol panah sebagai indikator visual bahwa kartu bisa diklik
   Widget _buildArrow() {
     return Container(
       width: 28,

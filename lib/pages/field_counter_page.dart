@@ -4,6 +4,7 @@ import '../components/counter/summary_card.dart';
 import '../components/counter/counter_field.dart';
 import '../utils/app_theme.dart';
 
+// Halaman Field Counter — input multi-field angka dengan ringkasan statistik real-time
 class FieldCounterPage extends StatefulWidget {
   const FieldCounterPage({super.key});
 
@@ -14,6 +15,7 @@ class FieldCounterPage extends StatefulWidget {
 class _FieldCounterPageState extends State<FieldCounterPage> {
   final _ctrl = FieldCounterController();
 
+  // Wajib dispose controller agar TextEditingController & FocusNode tidak memory leak
   @override
   void dispose() {
     _ctrl.dispose();
@@ -51,6 +53,7 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
         ),
         title: const Text('Field Counter', style: AppTheme.titleLarge),
         actions: [
+          // Tombol clear — reset semua field ke kondisi awal (1 field kosong)
           GestureDetector(
             onTap: () => setState(() => _ctrl.clearAll()),
             child: Container(
@@ -90,6 +93,7 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
       body: Column(
         children: [
           const SizedBox(height: 4),
+          // SummaryCard otomatis update karena allNumbers dihitung ulang setiap setState
           SummaryCard(
             numbers: _ctrl.allNumbers,
             fmt: FieldCounterController.fmt,
@@ -97,27 +101,26 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
           const SizedBox(height: 12),
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 100), // Padding bawah agar tidak tertutup FAB
               itemCount: _ctrl.controllers.length,
-              itemBuilder:
-                  (context, i) => CounterField(
-                    index: i,
-                    controller: _ctrl.controllers[i],
-                    focusNode: _ctrl.focusNodes[i],
-                    showRemove: _ctrl.controllers.length > 1,
-                    onRemove: () => setState(() => _ctrl.removeField(i)),
-                    onChanged: () => setState(() {}),
-                    errorText: _ctrl.errorAt(i), // ← tambahkan ini
-                  ),
+              itemBuilder: (context, i) => CounterField(
+                index: i,
+                controller: _ctrl.controllers[i],
+                focusNode: _ctrl.focusNodes[i],
+                showRemove: _ctrl.controllers.length > 1, // Tombol hapus hanya jika field > 1
+                onRemove: () => setState(() => _ctrl.removeField(i)),
+                onChanged: () => setState(() {}), // Trigger rebuild agar SummaryCard ikut update
+                errorText: _ctrl.errorAt(i),
+              ),
             ),
           ),
         ],
       ),
+      // FAB disabled (abu) jika field terakhir masih kosong atau invalid
       floatingActionButton: FloatingActionButton(
-        onPressed:
-            _ctrl.canAddField
-                ? () => setState(() => _ctrl.addField())
-                : null, // disabled
+        onPressed: _ctrl.canAddField
+            ? () => setState(() => _ctrl.addField())
+            : null,
         backgroundColor: _ctrl.canAddField ? AppTheme.primary : AppTheme.iconBg,
         elevation: 4,
         child: Icon(

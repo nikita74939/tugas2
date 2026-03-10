@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../../models/lap_data.dart';
 import '../../utils/app_theme.dart';
 
+// Widget daftar lap stopwatch — lap terbaru selalu di atas dengan tampilan menonjol
 class LapList extends StatelessWidget {
   final List<LapData> laps;
-  final String Function(Duration) formatDuration;
+  final String Function(Duration) formatDuration; // Fungsi format durasi dari parent
 
   const LapList({
     super.key,
@@ -26,7 +27,7 @@ class LapList extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 8),
       itemBuilder: (context, i) {
         final lap = laps[i];
-        final isFirst = i == 0;
+        final isFirst = i == 0; // Index 0 = lap terbaru — tampil hitam & menonjol
 
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -43,7 +44,7 @@ class LapList extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Badge
+              // Badge nomor lap
               Container(
                 width: 30,
                 height: 30,
@@ -65,7 +66,7 @@ class LapList extends StatelessWidget {
               ),
               const SizedBox(width: 12),
 
-              // Split time
+              // Split: waktu lap ini saja (selisih antar lap)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -89,8 +90,8 @@ class LapList extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              
-              // Total time
+
+              // Total: waktu kumulatif dari awal hingga lap ini
               Text(
                 formatDuration(lap.total),
                 style: TextStyle(

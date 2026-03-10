@@ -4,6 +4,7 @@ import '../components/number checker/number_display.dart';
 import '../components/number checker/number_keypad.dart';
 import '../utils/app_theme.dart';
 
+// Halaman Number Checker — cek apakah angka prima, genap, atau ganjil
 class NumberCheckerPage extends StatefulWidget {
   const NumberCheckerPage({super.key});
 
@@ -12,6 +13,7 @@ class NumberCheckerPage extends StatefulWidget {
 }
 
 class _NumberCheckerPageState extends State<NumberCheckerPage> {
+  // StatefulWidget dipakai karena setState diperlukan untuk update display saat keypad ditekan
   final _ctrl = NumberCheckerController();
 
   @override
@@ -47,6 +49,7 @@ class _NumberCheckerPageState extends State<NumberCheckerPage> {
       ),
       body: Column(
         children: [
+          // Display (flex 1) lebih kecil dari keypad (flex 2) — sama dengan pola kalkulator
           Expanded(
             flex: 1,
             child: NumberDisplay(
@@ -57,6 +60,7 @@ class _NumberCheckerPageState extends State<NumberCheckerPage> {
           ),
           Expanded(
             flex: 2,
+            // setState di sini agar display ikut rebuild setiap kali tombol ditekan
             child: NumberKeypad(
               onTap: (label) => setState(() => _ctrl.onTap(label)),
             ),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 
+// Widget keypad angka — dipakai untuk input numerik dengan tombol DEL dan CHECK
 class NumberKeypad extends StatelessWidget {
-  final void Function(String) onTap;
+  final void Function(String) onTap; // Callback dengan label tombol yang ditekan
 
   const NumberKeypad({super.key, required this.onTap});
 
+  // Layout tombol keypad — dipisah jadi konstanta agar mudah diubah tanpa menyentuh logika
   static const _buttons = [
     ['7', '8', '9'],
     ['4', '5', '6'],
@@ -35,8 +37,8 @@ class NumberKeypad extends StatelessWidget {
   }
 
   Widget _buildKey(String label) {
-    final isCheck = label == 'CHECK';
-    final isDel = label == 'DEL';
+    final isCheck = label == 'CHECK'; // Tombol konfirmasi — tampil hitam & menonjol
+    final isDel = label == 'DEL';     // Tombol hapus — tampil sebagai ikon, bukan teks
 
     return Expanded(
       child: GestureDetector(
@@ -46,6 +48,7 @@ class NumberKeypad extends StatelessWidget {
           decoration: BoxDecoration(
             color: isCheck ? AppTheme.primary : AppTheme.surface,
             borderRadius: BorderRadius.circular(14),
+            // Shadow lebih tebal pada CHECK agar terlihat lebih penting
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(isCheck ? 0.18 : 0.05),
@@ -55,6 +58,7 @@ class NumberKeypad extends StatelessWidget {
             ],
           ),
           child: Center(
+            // DEL tampil sebagai ikon backspace, tombol lain tampil sebagai teks
             child: isDel
                 ? const Icon(
                     Icons.backspace_outlined,
@@ -64,7 +68,7 @@ class NumberKeypad extends StatelessWidget {
                 : Text(
                     label,
                     style: TextStyle(
-                      fontSize: isCheck ? 15 : 22,
+                      fontSize: isCheck ? 15 : 22, // CHECK lebih kecil karena labelnya panjang
                       fontWeight: FontWeight.w700,
                       letterSpacing: isCheck ? 0.5 : -0.5,
                       color: isCheck ? Colors.white : AppTheme.textPrimary,

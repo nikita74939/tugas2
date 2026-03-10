@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 
+// Widget tombol kontrol stopwatch — reset (kiri), play/pause (tengah), lap (kanan)
 class ControlButtons extends StatelessWidget {
-  final bool isRunning;
-  final bool canReset;
-  final bool canLap;
+  final bool isRunning; // Menentukan ikon tengah: pause jika berjalan, play jika berhenti
+  final bool canReset;  // Reset hanya aktif jika stopwatch pernah dijalankan
+  final bool canLap;    // Lap hanya aktif saat stopwatch sedang berjalan
   final VoidCallback startPause;
   final VoidCallback reset;
   final VoidCallback lap;
@@ -27,12 +28,14 @@ class ControlButtons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          // Tombol reset — onTap null jika belum bisa direset (mencegah aksi tak sengaja)
           _SideButton(
             icon: Icons.refresh_rounded,
             onTap: canReset ? reset : null,
             active: canReset,
           ),
-          // Main play/pause button
+
+          // Tombol play/pause utama — lebih besar dan menonjol di tengah
           GestureDetector(
             onTap: startPause,
             child: Container(
@@ -56,6 +59,8 @@ class ControlButtons extends StatelessWidget {
               ),
             ),
           ),
+
+          // Tombol lap — onTap null jika stopwatch tidak sedang berjalan
           _SideButton(
             icon: Icons.flag_outlined,
             onTap: canLap ? lap : null,
@@ -67,9 +72,11 @@ class ControlButtons extends StatelessWidget {
   }
 }
 
+// Tombol bulat kecil untuk aksi sekunder (reset & lap)
+// active mengontrol warna ikon — abu jika tidak tersedia, hitam jika tersedia
 class _SideButton extends StatelessWidget {
   final IconData icon;
-  final VoidCallback? onTap;
+  final VoidCallback? onTap; // null = tombol tidak bisa ditekan
   final bool active;
 
   const _SideButton({
@@ -99,6 +106,7 @@ class _SideButton extends StatelessWidget {
         child: Icon(
           icon,
           size: 22,
+          // Ikon gelap jika aktif, abu jika tidak tersedia
           color: active ? AppTheme.textPrimary : AppTheme.textSecondary,
         ),
       ),
