@@ -8,6 +8,7 @@ class InputValidator {
         input
             .replaceAll(',', ' ')
             .replaceAll(';', ' ')
+            .replaceAll('"', ' ')
             .replaceAll('\n', ' ')
             .trim();
 

@@ -12,6 +12,7 @@ dependencies:
   google_fonts: 
   math_expressions: ^2.6.0
   provider: ^6.1.5+1
+  hijri: ^3.0.0
 
 dev_dependencies:
   flutter_test:

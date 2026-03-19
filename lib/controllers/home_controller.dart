@@ -5,6 +5,7 @@ import 'package:tugas2/pages/stopwatch_page.dart';
 import 'package:tugas2/pages/number_checker_page.dart';
 import 'package:tugas2/pages/pyramid_page.dart';
 import 'package:tugas2/pages/field_counter_page.dart';
+import 'package:tugas2/pages/hijri_page.dart';
 
 class HomeController {
   static const List<MenuItemModel> menus = [
@@ -38,12 +39,15 @@ class HomeController {
       subtitle: 'Hitung total angka di field',
       page: FieldCounterPage(),
     ),
+    MenuItemModel(
+      icon: Icons.calendar_month_rounded,
+      label: 'Konversi Hijriah',
+      subtitle: 'Masehi ke hijriah & sebaliknya',
+      page: HijriPage(),
+    ),
   ];
 
   static void navigateTo(BuildContext context, Widget page) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => page),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (_) => page));
   }
 }
