@@ -6,6 +6,7 @@ import 'package:tugas2/pages/number_checker_page.dart';
 import 'package:tugas2/pages/pyramid_page.dart';
 import 'package:tugas2/pages/field_counter_page.dart';
 import 'package:tugas2/pages/hijri_page.dart';
+import 'package:tugas2/pages/age_page.dart';
 
 class HomeController {
   static const List<MenuItemModel> menus = [
@@ -44,6 +45,12 @@ class HomeController {
       label: 'Konversi Hijriah',
       subtitle: 'Masehi ke hijriah & sebaliknya',
       page: HijriPage(),
+    ),
+    MenuItemModel(
+      icon: Icons.cake_rounded,
+      label: 'Calculator Age',
+      subtitle: 'Hitung usia detail',
+      page: AgePage(),
     ),
   ];
 
