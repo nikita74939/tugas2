@@ -7,6 +7,7 @@ import 'package:tugas2/pages/pyramid_page.dart';
 import 'package:tugas2/pages/field_counter_page.dart';
 import 'package:tugas2/pages/hijri_page.dart';
 import 'package:tugas2/pages/age_page.dart';
+import 'package:tugas2/pages/weton_page.dart';
 
 class HomeController {
   static const List<MenuItemModel> menus = [
@@ -51,6 +52,12 @@ class HomeController {
       label: 'Calculator Age',
       subtitle: 'Hitung usia detail',
       page: AgePage(),
+    ),
+    MenuItemModel(
+      icon: Icons.auto_awesome_rounded,
+      label: 'Konversi Weton',
+      subtitle: 'Cek hari dan pasaran jawa',
+      page: WetonPage(),
     ),
   ];
 

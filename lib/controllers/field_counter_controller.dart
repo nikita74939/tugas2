@@ -20,8 +20,12 @@ class FieldCounterController {
 
   /// Clear semua field dan kembali ke 1 field kosong
   void clearAll() {
-    for (final c in controllers) c.dispose();
-    for (final f in focusNodes) f.dispose();
+    for (final c in controllers) {
+      c.dispose();
+    }
+    for (final f in focusNodes) {
+      f.dispose();
+    }
     controllers.clear();
     focusNodes.clear();
     controllers.add(TextEditingController());
@@ -29,8 +33,12 @@ class FieldCounterController {
   }
 
   void dispose() {
-    for (final c in controllers) c.dispose();
-    for (final f in focusNodes) f.dispose();
+    for (final c in controllers) {
+      c.dispose();
+    }
+    for (final f in focusNodes) {
+      f.dispose();
+    }
   }
 
   /// Hanya angka valid dari semua field
