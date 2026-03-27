@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../controllers/weton_controller.dart';
+import '../components/weton/weton_result_card.dart';
 import '../utils/app_theme.dart';
 
 class WetonPage extends StatefulWidget {
@@ -9,96 +11,113 @@ class WetonPage extends StatefulWidget {
 }
 
 class _WetonPageState extends State<WetonPage> {
-  DateTime? _selectedDate;
-  String _hari = "-";
-  String _weton = "-";
+  final _controller = WetonController();
+  DateTime _selectedDate = DateTime.now();
+  Map<String, String>? _result;
 
-  void _hitungWeton(DateTime date) {
-    // Referensi: 1 Januari 1970 adalah Kamis Wage
-    // Kamis (index 3 di Masehi), Wage (index 4 di Pasaran)
-    final List<String> hariMasehi = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
-    final List<String> hariPasaran = ["Kliwon", "Legi", "Pahing", "Pon", "Wage"];
-
-    int diff = date.difference(DateTime(1970, 1, 1)).inDays;
-    
+  void _calculate() {
     setState(() {
-      _selectedDate = date;
-      _hari = hariMasehi[(diff + 3) % 7];
-      _weton = hariPasaran[(diff + 4) % 5];
+      _result = _controller.hitungWeton(_selectedDate);
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: AppTheme.background,
+    appBar: AppBar(
       backgroundColor: AppTheme.background,
-      appBar: AppBar(
-        title: const Text("Konversi Weton"),
-        backgroundColor: AppTheme.primary,
-        foregroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: AppTheme.border),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Text("Pilih Tanggal Lahir/Kejadian", style: AppTheme.titleMedium),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () async {
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(2100),
-                        );
-                        if (picked != null) _hitungWeton(picked);
-                      },
-                      icon: const Icon(Icons.calendar_today),
-                      label: Text(_selectedDate == null 
-                        ? "Pilih Tanggal" 
-                        : "${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year}"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(double.infinity, 50),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      elevation: 0,
+      title: const Text('Konversi Weton', style: AppTheme.titleLarge),
+    ),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          // CARD INPUT
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)],
             ),
-            const SizedBox(height: 24),
-            if (_selectedDate != null)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.primary.withOpacity(0.3)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Pilih Tanggal Kejadian", 
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
                 ),
-                child: Column(
-                  children: [
-                    Text("Hasil Konversi", style: AppTheme.cardSubtitle),
-                    const SizedBox(height: 8),
-                    Text("$_hari $_weton", 
-                      style: AppTheme.titleLarge.copyWith(color: AppTheme.primary)),
-                  ],
+                const SizedBox(height: 15),
+                InkWell(
+                  onTap: () async {
+                    final d = await showDatePicker(
+                      context: context,
+                      initialDate: _selectedDate,
+                      firstDate: DateTime(1800),
+                      lastDate: DateTime(2100),
+                    );
+                    if (d != null) {
+                      setState(() {
+                        _selectedDate = d;
+                        // Otomatis hitung saat tanggal dipilih
+                        _result = _controller.hitungWeton(d);
+                      });
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppTheme.primary.withOpacity(0.2)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_month, color: AppTheme.primary),
+                        const SizedBox(width: 12),
+                        Text(
+                          "${_selectedDate.day} - ${_selectedDate.month} - ${_selectedDate.year}",
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.edit_calendar, color: Colors.grey, size: 20),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-          ],
-        ),
+                const SizedBox(height: 10),
+                const Text(
+                  "*Hasil akan terupdate otomatis saat tanggal diubah",
+                  style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 30),
+          
+          // HASIL (Card Component yang sudah kita buat tadi)
+          WetonResultCard(hasil: _result),
+          
+          const SizedBox(height: 20),
+          
+          // Tombol Reset (Opsional)
+          TextButton.icon(
+            onPressed: () {
+              setState(() {
+                _selectedDate = DateTime.now();
+                _result = null;
+              });
+            }, 
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text("Reset Data"),
+            style: TextButton.styleFrom(foregroundColor: Colors.grey),
+          )
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

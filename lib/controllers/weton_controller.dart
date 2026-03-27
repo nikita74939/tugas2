@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class WetonController {
   final List<String> daftarHari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
