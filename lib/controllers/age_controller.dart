@@ -1,55 +1,74 @@
 import 'package:flutter/material.dart';
 
 class AgeController {
-  // Tambahkan parameter 'int second' agar input dari user terbaca
   Map<String, int> calculateAge(DateTime date, TimeOfDay time, int second) {
-    // 1. Gabungkan tanggal, jam, DAN detik lahir secara spesifik
+    // 1. Gabungkan input user
     DateTime birth = DateTime(
       date.year,
       date.month,
       date.day,
       time.hour,
       time.minute,
-      second, // <--- Sekarang detiknya pakai input user
+      second,
     );
     DateTime now = DateTime.now();
 
-    // 2. Hitung selisih Kalender (Tahun, Bulan, Hari)
+    // --- VALIDASI UTAMA ---
+    // Jika waktu lahir ada di masa depan (misal: baru lahir jam 8 malam nanti)
+    if (birth.isAfter(now)) {
+      return {
+        'years': 0,
+        'months': 0,
+        'days': 0,
+        'hours': 0,
+        'minutes': 0,
+        'seconds': 0,
+      };
+    }
+
+    // 2. Hitung selisih Durasi total untuk jam, menit, detik
+    Duration diff = now.difference(birth);
+
+    // 3. Hitung selisih Kalender (Tahun, Bulan, Hari)
     int years = now.year - birth.year;
     int months = now.month - birth.month;
     int days = now.day - birth.day;
 
-    // Logika penyesuaian jika hari lahir lebih besar dari hari sekarang
+    // Perbaikan Jam: Jika jam/menit/detik sekarang belum mencapai jam lahir,
+    // maka hari harus dikurangi 1
+    // Kita buat DateTime 'temp' untuk membandingkan posisi waktu saat ini
+    DateTime tempBirth = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      birth.hour,
+      birth.minute,
+      birth.second,
+    );
+    if (now.isBefore(tempBirth)) {
+      days--;
+    }
+
+    // Logika penyesuaian hari negatif
     if (days < 0) {
       months--;
-      // Mengambil jumlah hari di bulan sebelumnya
       int daysInPrevMonth = DateTime(now.year, now.month, 0).day;
       days += daysInPrevMonth;
     }
 
-    // Logika penyesuaian jika bulan lahir lebih besar dari bulan sekarang
+    // Logika penyesuaian bulan negatif
     if (months < 0) {
       years--;
       months += 12;
     }
 
-    // 3. Hitung selisih Waktu (Jam, Menit, Detik) secara presisi
-    // Duration menghitung total selisih waktu secara nyata
-    Duration diff = now.difference(birth);
-
-    // Gunakan modulo (%) untuk memecah total durasi ke format jam digital
-    int hours = diff.inHours % 24;
-    int minutes = diff.inMinutes % 60;
-    int seconds = diff.inSeconds % 60;
-
-    // 4. Return hasil dalam bentuk Map
     return {
       'years': years,
       'months': months,
       'days': days,
-      'hours': hours,
-      'minutes': minutes,
-      'seconds': seconds,
+      'hours': diff.inHours % 24,
+      'minutes': diff.inMinutes % 60,
+      'seconds': diff.inSeconds % 60,
     };
   }
 }
