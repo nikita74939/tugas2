@@ -90,11 +90,16 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
       body: Column(
         children: [
           const SizedBox(height: 4),
+          // Bagian Ringkasan
           SummaryCard(
-            numbers: _ctrl.allNumbers,
-            fmt: FieldCounterController.fmt,
+            totalCount:
+                _ctrl.totalSmartCounter, // Total (Grup Angka + Karakter lain)
+            totalNumbers:
+                _ctrl.totalNumberGroups, // Berapa banyak grup angka (123 = 1)
+            totalWords: _ctrl.totalWords, // Total kata
           ),
           const SizedBox(height: 12),
+          // Bagian List Input
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
@@ -107,7 +112,7 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
                     showRemove: _ctrl.controllers.length > 1,
                     onRemove: () => setState(() => _ctrl.removeField(i)),
                     onChanged: () => setState(() {}),
-                    errorText: _ctrl.errorAt(i), // ← tambahkan ini
+                    // Parameter errorText dihapus karena sudah tidak dipakai di teks berita
                   ),
             ),
           ),
@@ -115,9 +120,7 @@ class _FieldCounterPageState extends State<FieldCounterPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed:
-            _ctrl.canAddField
-                ? () => setState(() => _ctrl.addField())
-                : null, // disabled
+            _ctrl.canAddField ? () => setState(() => _ctrl.addField()) : null,
         backgroundColor: _ctrl.canAddField ? AppTheme.primary : AppTheme.iconBg,
         elevation: 4,
         child: Icon(

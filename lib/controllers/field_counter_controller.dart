@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/input_validator.dart';
 
 class FieldCounterController {
   final List<TextEditingController> controllers = [TextEditingController()];
@@ -18,14 +17,9 @@ class FieldCounterController {
     focusNodes.removeAt(index);
   }
 
-  /// Clear semua field dan kembali ke 1 field kosong
   void clearAll() {
-    for (final c in controllers) {
-      c.dispose();
-    }
-    for (final f in focusNodes) {
-      f.dispose();
-    }
+    for (final c in controllers) c.dispose();
+    for (final f in focusNodes) f.dispose();
     controllers.clear();
     focusNodes.clear();
     controllers.add(TextEditingController());
@@ -33,44 +27,54 @@ class FieldCounterController {
   }
 
   void dispose() {
+    for (final c in controllers) c.dispose();
+    for (final f in focusNodes) f.dispose();
+  }
+
+  // --- LOGIKA SMART COUNTER BARU ---
+
+  /// Menghitung total unit: (Grup Angka dihitung 1) + (Karakter Lain)
+  /// Contoh: "Beli 2 kaos 50000" -> Beli(4) + spasi(1) + 2(1) + spasi(1) + kaos(4) + spasi(1) + 50000(1) = 13
+  int get totalSmartCounter {
+    int total = 0;
     for (final c in controllers) {
-      c.dispose();
+      String text = c.text;
+      if (text.isEmpty) continue;
+
+      // 1. Hitung berapa banyak grup angka (misal: 123 dihitung 1)
+      final numGroups = RegExp(r'\d+').allMatches(text).length;
+
+      // 2. Hitung karakter selain angka
+      final nonDigitsCount = text.replaceAll(RegExp(r'\d+'), '').length;
+
+      total += numGroups + nonDigitsCount;
     }
-    for (final f in focusNodes) {
-      f.dispose();
-    }
+    return total;
   }
 
-  /// Hanya angka valid dari semua field
-  List<double> get allNumbers {
-    final List<double> numbers = [];
+  /// Menghitung murni berapa banyak grup angka yang ada
+  int get totalNumberGroups {
+    int total = 0;
     for (final c in controllers) {
-      final result = InputValidator.parseNumbers(c.text);
-      numbers.addAll(result.numbers);
+      total += RegExp(r'\d+').allMatches(c.text).length;
     }
-    return numbers;
+    return total;
   }
 
-  /// Error message per field (null = tidak ada error)
-  String? errorAt(int index) {
-    return InputValidator.getErrorMessage(controllers[index].text);
+  /// Menghitung total kata
+  int get totalWords {
+    int count = 0;
+    for (final c in controllers) {
+      final text = c.text.trim();
+      if (text.isNotEmpty) {
+        count += text.split(RegExp(r'\s+')).length;
+      }
+    }
+    return count;
   }
 
-  /// True jika ada field yang punya input invalid
-  bool get hasAnyError {
-    return controllers.any(
-      (c) => InputValidator.parseNumbers(c.text).hasErrors,
-    );
-  }
-
-  /// Boleh add field hanya jika field terakhir tidak kosong dan tidak ada error
+  /// Boleh tambah field jika field terakhir tidak kosong
   bool get canAddField {
-    final lastText = controllers.last.text;
-    if (lastText.trim().isEmpty) return false;
-    if (InputValidator.parseNumbers(lastText).hasErrors) return false;
-    return true;
+    return controllers.last.text.trim().isNotEmpty;
   }
-
-  static String fmt(double v) =>
-      v % 1 == 0 ? v.toInt().toString() : v.toStringAsFixed(2);
 }

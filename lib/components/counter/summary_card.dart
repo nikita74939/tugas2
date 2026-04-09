@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import '../../utils/app_theme.dart';
 
 class SummaryCard extends StatelessWidget {
-  final List<double> numbers;
-  final String Function(double) fmt;
+  final int totalCount; // Ini isi dari totalSmartCounter
+  final int
+  totalNumbers; // Ini isi dari totalNumberGroups (Angka 123 dihitung 1)
+  final int totalWords; // Total kata
 
-  const SummaryCard({super.key, required this.numbers, required this.fmt});
+  const SummaryCard({
+    super.key,
+    required this.totalCount,
+    required this.totalNumbers,
+    required this.totalWords,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final count = numbers.length;
-    final sum = numbers.fold(0.0, (a, b) => a + b);
-    final avg = count > 0 ? sum / count : 0.0;
-    final min = count > 0 ? numbers.reduce((a, b) => a < b ? a : b) : 0.0;
-    final max = count > 0 ? numbers.reduce((a, b) => a > b ? a : b) : 0.0;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
       child: Container(
@@ -33,8 +34,7 @@ class SummaryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            // Header row
+            // Header: Total Hitungan (Smart)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -42,10 +42,10 @@ class SummaryCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('TOTAL ANGKA', style: AppTheme.titleMedium),
+                    Text('TOTAL HITUNGAN', style: AppTheme.titleMedium),
                     const SizedBox(height: 4),
                     Text(
-                      '$count',
+                      '$totalCount',
                       style: const TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.w800,
@@ -64,40 +64,35 @@ class SummaryCard extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.numbers_rounded,
+                    Icons.calculate_rounded, // Ikon ganti jadi kalkulator
                     color: Colors.white,
                     size: 22,
                   ),
                 ),
               ],
             ),
-            if (count > 0) ...[
-              const SizedBox(height: 16),
-              Container(height: 1, color: AppTheme.border),
-              const SizedBox(height: 14),
-              Row(
-                children: [
-                  _statChip('Jumlah', fmt(sum)),
-                  _divider(),
-                  _statChip('Rata-rata', fmt(avg)),
-                  _divider(),
-                  _statChip('Min', fmt(min)),
-                  _divider(),
-                  _statChip('Maks', fmt(max)),
-                ],
-              ),
-            ],
+
+            const SizedBox(height: 16),
+            Container(height: 1, color: AppTheme.border),
+            const SizedBox(height: 14),
+
+            // Statistik bawah yang baru
+            Row(
+              children: [
+                _statChip('Data Angka', '$totalNumbers'),
+                _divider(),
+                _statChip('Total Kata', '$totalWords'),
+                _divider(),
+                _statChip('Karakter Lain', '${totalCount - totalNumbers}'),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _divider() => Container(
-    width: 1,
-    height: 32,
-    color: AppTheme.border,
-  );
+  Widget _divider() => Container(width: 1, height: 32, color: AppTheme.border);
 
   Widget _statChip(String label, String value) {
     return Expanded(
@@ -105,10 +100,7 @@ class SummaryCard extends StatelessWidget {
         children: [
           Text(label, style: AppTheme.cardSubtitle),
           const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(value, style: AppTheme.cardTitle),
-          ),
+          Text(value, style: AppTheme.cardTitle.copyWith(fontSize: 14)),
         ],
       ),
     );
