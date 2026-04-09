@@ -51,8 +51,11 @@ class _NumberCheckerPageState extends State<NumberCheckerPage> {
             flex: 1,
             child: NumberDisplay(
               input: _ctrl.input,
-              result: _ctrl.result,
-              resultColor: _ctrl.resultColor,
+              resultParityLabel: _ctrl.resultParityLabel,
+              resultPrimeLabel:  _ctrl.resultPrimeLabel,
+              errorMessage:      _ctrl.errorMessage,
+              parityColor:       _ctrl.parityColor,
+              primeColor:        _ctrl.primeColor,
             ),
           ),
           Expanded(

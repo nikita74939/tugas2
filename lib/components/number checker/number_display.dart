@@ -3,19 +3,26 @@ import '../../utils/app_theme.dart';
 
 class NumberDisplay extends StatelessWidget {
   final String input;
-  final String result;
-  final Color resultColor;
+  final String resultParityLabel;
+  final String resultPrimeLabel;
+  final String errorMessage;
+  final Color parityColor;
+  final Color primeColor;
 
   const NumberDisplay({
     super.key,
     required this.input,
-    required this.result,
-    required this.resultColor,
+    required this.resultParityLabel,
+    required this.resultPrimeLabel,
+    required this.errorMessage,
+    required this.parityColor,
+    required this.primeColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool hasResult = result.isNotEmpty;
+    final bool hasResult = resultParityLabel.isNotEmpty;
+    final bool hasError  = errorMessage.isNotEmpty;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 4, 20, 8),
@@ -47,31 +54,48 @@ class NumberDisplay extends StatelessWidget {
               height: 1,
             ),
           ),
-          // Result label
-          Container(
-            padding:
-                hasResult
-                    ? const EdgeInsets.symmetric(horizontal: 18, vertical: 6)
-                    : EdgeInsets.zero,
-            decoration:
-                hasResult
-                    ? BoxDecoration(
-                      color: AppTheme.iconBg,
-                      borderRadius: BorderRadius.circular(20),
-                    )
-                    : null,
-            child: Text(
-              result,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.2,
-                color: hasResult ? AppTheme.textPrimary : Colors.transparent,
-              ),
+
+          // Result area
+          if (hasError)
+            _ResultChip(label: errorMessage, color: Colors.red)
+          else if (hasResult)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _ResultChip(label: resultParityLabel, color: parityColor),
+                const SizedBox(width: 8),
+                _ResultChip(label: resultPrimeLabel,  color: primeColor),
+              ],
             ),
-          ),
         ],
+      ),
+    );
+  }
+}
+
+class _ResultChip extends StatelessWidget {
+  final String label;
+  final Color color;
+
+  const _ResultChip({required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.35), width: 1),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w700,
+          color: color,
+          letterSpacing: 0.2,
+        ),
       ),
     );
   }
