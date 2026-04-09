@@ -23,11 +23,20 @@ class CounterField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Hitung statistik lokal untuk ditampilkan di bawah field
+    final charCount = controller.text.length;
+    final wordCount =
+        controller.text.trim().isEmpty
+            ? 0
+            : controller.text.trim().split(RegExp(r'\s+')).length;
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(
+        bottom: 16,
+      ), // Jarak antar field lebih lebar
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Field utama
           Container(
             decoration: BoxDecoration(
               color: AppTheme.surface,
@@ -43,7 +52,7 @@ class CounterField extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nomor field
+                // Nomor Urut
                 Container(
                   width: 44,
                   padding: const EdgeInsets.only(top: 14),
@@ -66,19 +75,23 @@ class CounterField extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Input
+
+                // Input Berita
                 Expanded(
                   child: TextField(
                     controller: controller,
                     focusNode: focusNode,
                     keyboardType: TextInputType.multiline,
-                    maxLines: null,
+                    maxLines: null, // Membuat field bisa memanjang sesuai teks
+                    minLines: 3, // Tinggi minimal agar enak buat paste berita
                     onChanged: (_) => onChanged(),
-                    style: AppTheme.cardTitle.copyWith(fontSize: 14),
+                    style: AppTheme.cardTitle.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                     decoration: InputDecoration(
-                      hintText:
-                          'Masukkan angka (pisah spasi/koma)\nContoh: 10, 20, 30',
-                      hintStyle: AppTheme.cardSubtitle,
+                      hintText: 'Masukkan data...',
+                      hintStyle: AppTheme.cardSubtitle.copyWith(fontSize: 13),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 14,
@@ -87,7 +100,8 @@ class CounterField extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Tombol hapus
+
+                // Tombol Hapus
                 if (showRemove)
                   GestureDetector(
                     onTap: onRemove,
@@ -110,38 +124,35 @@ class CounterField extends StatelessWidget {
             ),
           ),
 
-          // Error banner
-          if (errorText != null) ...[
-            const SizedBox(height: 6),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF3B30),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.error_rounded,
-                    color: Colors.white,
-                    size: 15,
+          // Label Statistik & Error
+          Padding(
+            padding: const EdgeInsets.only(top: 6, left: 4, right: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Info Karakter & Kata (Real-time)
+                Text(
+                  "$charCount Karakter | $wordCount Kata",
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.textSecondary.withOpacity(0.7),
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      errorText!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                ),
+
+                // Error Message (jika ada)
+                if (errorText != null)
+                  Text(
+                    errorText!,
+                    style: const TextStyle(
+                      color: Color(0xFFFF3B30),
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
-          ],
+          ),
         ],
       ),
     );
