@@ -31,34 +31,41 @@ class CalculatorDisplay extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
 
-          // Question
+          // Question — scroll horizontal kalau panjang
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              question.isEmpty ? '0' : question,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTheme.cardSubtitle.copyWith(
-                fontSize: 16,
-                color: AppTheme.textSecondary,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              reverse: true, // scroll otomatis ke kanan (karakter terbaru)
+              child: Text(
+                question.isEmpty ? '0' : question,
+                style: AppTheme.cardSubtitle.copyWith(
+                  fontSize: 18,
+                  color: AppTheme.textSecondary,
+                ),
               ),
             ),
           ),
-          
-          // Answer
+
+          const SizedBox(height: 8),
+
+          // Answer — font auto-shrink kalau panjang
           Align(
             alignment: Alignment.centerRight,
-            child: Text(
-              answer,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: !hasError ? 40 : 20,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -1.5,
-                color: hasError ? Colors.red.shade400 : AppTheme.textPrimary,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Text(
+                answer,
+                style: TextStyle(
+                  fontSize: !hasError ? 40 : 20,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -1.5,
+                  color: hasError ? Colors.red.shade400 : AppTheme.textPrimary,
+                ),
               ),
             ),
           ),
