@@ -180,7 +180,7 @@ class _HijriPageState extends State<HijriPage> {
               _isMasehiToHijri = !val;
               _result = "";
             }),
-        activeColor: AppTheme.primary,
+        activeThumbColor: AppTheme.primary,
       ),
     );
   }
@@ -222,7 +222,7 @@ class _HijriPageState extends State<HijriPage> {
             Expanded(
               flex: 2,
               child: DropdownButtonFormField<int>(
-                value: _selectedMonthIndex,
+                initialValue: _selectedMonthIndex,
                 decoration: const InputDecoration(
                   labelText: "Bulan",
                   border: OutlineInputBorder(),
