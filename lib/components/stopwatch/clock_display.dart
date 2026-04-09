@@ -36,14 +36,14 @@ class ClockDisplay extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        // Time text
+        // Time text — font diperkecil sedikit agar HH:MM:SS.ms tetap muat
         Text(
           formattedTime,
           style: const TextStyle(
-            fontSize: 48,
+            fontSize: 36,          // sebelumnya 48, dikecilkan agar format panjang muat
             fontWeight: FontWeight.w800,
             color: AppTheme.textPrimary,
-            letterSpacing: -1.5,
+            letterSpacing: -1.0,
             fontFeatures: [FontFeature.tabularFigures()],
           ),
         ),
