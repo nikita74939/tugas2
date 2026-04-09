@@ -28,7 +28,8 @@ class StopwatchController extends ChangeNotifier {
   }
 
   void _start() {
-    debugSkipTo(const Duration(hours: 23, minutes: 59, seconds: 57));
+    // debugSkipTo(const Duration(hours: 23, minutes: 59, seconds: 57));
+
     _isRunning = true;
     _isPaused = false;
     _timer = Timer.periodic(const Duration(milliseconds: 10), (_) {
