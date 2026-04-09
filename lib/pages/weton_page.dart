@@ -55,8 +55,8 @@ Widget build(BuildContext context) {
                     final d = await showDatePicker(
                       context: context,
                       initialDate: _selectedDate,
-                      firstDate: DateTime(1800),
-                      lastDate: DateTime(2100),
+                      firstDate: DateTime(1),
+                      lastDate: DateTime(5000),
                     );
                     if (d != null) {
                       setState(() {

@@ -9,46 +9,43 @@ class PyramidController {
   bool get hasResult => result.isNotEmpty;
   bool get isError => hasResult && resultLabel.isEmpty;
 
-  void calculate(PyramidResult type, String baseText, String heightText, String slantText) {
+  // FUNGSI BARU: Hitung Apotema otomatis berdasarkan Tinggi & Sisi
+  double calculateApotemaAuto(double base, double height) {
+    // Pythagoras: s = sqrt(t^2 + (base/2)^2)
+    return sqrt(pow(height, 2) + pow(base / 2, 2));
+  }
+
+  void calculate(PyramidResult type, String baseText, String heightText) {
     final base = double.tryParse(baseText);
     final height = double.tryParse(heightText);
-    final slant = double.tryParse(slantText);
 
     activeResult = type;
 
+    // VALIDASI DASAR
+    if (base == null || height == null) {
+      result = 'Mohon isi semua data';
+      resultLabel = '';
+      return;
+    }
+    if (base <= 0 || height <= 0) {
+      result = 'Nilai harus positif';
+      resultLabel = '';
+      return;
+    }
+
     if (type == PyramidResult.volume) {
-      if (base == null || height == null) {
-        result = 'Isi alas & tinggi';
-        resultLabel = '';
-        return;
-      }
-      if (base <= 0 || height <= 0) {
-        result = 'Nilai harus lebih dari 0';
-        resultLabel = '';
-        return;
-      }
+      // Rumus Volume: 1/3 * Luas Alas * Tinggi
       final volume = (1 / 3) * pow(base, 2) * height;
       result = _formatResult(volume);
       resultLabel = 'Volume';
     } else {
-      if (base == null || slant == null) {
-        result = 'Isi alas & apotema';
-        resultLabel = '';
-        return;
-      }
-      if (base <= 0 || slant <= 0) {
-        result = 'Nilai harus lebih dari 0';
-        resultLabel = '';
-        return;
-      }
-      if (slant <= base / 2) {
-        result = 'Apotema terlalu kecil';
-        resultLabel = '';
-        return;
-      }
+      // Hitung Apotema otomatis untuk Luas Permukaan
+      final slant = calculateApotemaAuto(base, height);
       final baseArea = pow(base, 2).toDouble();
+      // Luas 4 segitiga: 4 * (1/2 * base * slant) = 2 * base * slant
       final lateralArea = 2 * base * slant;
       final totalArea = baseArea + lateralArea;
+      
       result = _formatResult(totalArea);
       resultLabel = 'Luas Permukaan';
     }

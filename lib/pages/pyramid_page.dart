@@ -20,16 +20,44 @@ class _PyramidPageState extends State<PyramidPage> {
   final _slantController = TextEditingController();
   final _controller = PyramidController();
 
+  // Helper untuk cek apakah input valid (angka & tidak kosong)
   bool _isValidField(TextEditingController c) {
     final text = c.text.trim();
     if (text.isEmpty) return false;
-    return !InputValidator.parseNumbers(text).hasErrors;
+    final val = double.tryParse(text);
+    return val != null && val > 0;
   }
 
-  bool get _canArea =>
-      _isValidField(_baseController) && _isValidField(_slantController);
-  bool get _canVolume =>
+  // Tombol Luas & Volume aktif jika Sisi dan Tinggi valid
+  // Karena Apotema sekarang otomatis, kita cukup cek Sisi & Tinggi
+  bool get _canCalculate =>
       _isValidField(_baseController) && _isValidField(_heightController);
+
+  // FUNGSI LOGIKA OTOMATIS:
+  // Dipanggil setiap kali user mengetik di InputCard
+  void _onInputChanged() {
+    setState(() {
+      final sText = _baseController.text;
+      final tText = _heightController.text;
+      
+      final s = double.tryParse(sText);
+      final t = double.tryParse(tText);
+
+      if (s != null && t != null && s > 0 && t > 0) {
+        // Panggil fungsi hitung apotema dari controller
+        double apo = _controller.calculateApotemaAuto(s, t);
+        _slantController.text = apo.toStringAsFixed(2);
+      } else {
+        // Kosongkan apotema jika input belum lengkap/valid
+        _slantController.clear();
+      }
+      
+      // Reset hasil perhitungan lama jika input berubah
+      if (_controller.hasResult) {
+        _controller.reset();
+      }
+    });
+  }
 
   void _calculate(PyramidResult type) {
     setState(() {
@@ -37,12 +65,11 @@ class _PyramidPageState extends State<PyramidPage> {
         type,
         _baseController.text,
         _heightController.text,
-        _slantController.text,
       );
     });
   }
 
-  void _reset() {
+  void _resetAll() {
     setState(() {
       _baseController.clear();
       _heightController.clear();
@@ -52,106 +79,53 @@ class _PyramidPageState extends State<PyramidPage> {
   }
 
   @override
-  void dispose() {
-    _baseController.dispose();
-    _heightController.dispose();
-    _slantController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.background,
         elevation: 0,
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppTheme.surface,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.arrow_back_rounded,
-              color: AppTheme.primary,
-              size: 20,
-            ),
-          ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
+          onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Pyramid', style: AppTheme.titleLarge),
+        title: const Text('Pyramid Calculator', style: AppTheme.titleLarge),
         actions: [
-          GestureDetector(
-            onTap: _reset,
-            child: Container(
-              margin: const EdgeInsets.only(right: 16),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppTheme.surface,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.refresh_rounded,
-                color: AppTheme.primary,
-                size: 20,
-              ),
-            ),
+          IconButton(
+            icon: const Icon(Icons.refresh, color: AppTheme.textPrimary),
+            onPressed: _resetAll,
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
+        padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Ilustrasi Pyramid
+            // Gambar Ilustrasi Limas
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppTheme.surface,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
               ),
               child: Image.asset(
-                'assets/images/Square_Pyramid.png',
-                height: 160,
+                'assets/images/Square_Pyramid.png', // Pastikan path benar
+                height: 150,
                 fit: BoxFit.contain,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // Input Fields
+            // Input Card dengan listener otomatis
             InputCard(
               baseController: _baseController,
               heightController: _heightController,
               slantController: _slantController,
-              onChanged: () => setState(() {}),
+              onChanged: _onInputChanged, // Menghubungkan Page dengan InputCard
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // Result Card
+            // Menampilkan Hasil jika sudah dihitung
             if (_controller.hasResult) ...[
               ResultCard(
                 result: _controller.result,
@@ -159,10 +133,10 @@ class _PyramidPageState extends State<PyramidPage> {
                 isError: _controller.isError,
                 activeResult: _controller.activeResult,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
             ],
 
-            // Buttons
+            // Baris Tombol Aksi
             Row(
               children: [
                 Expanded(
@@ -170,7 +144,7 @@ class _PyramidPageState extends State<PyramidPage> {
                     label: 'Luas Permukaan',
                     type: PyramidResult.area,
                     activeResult: _controller.activeResult,
-                    enabled: _canArea,
+                    enabled: _canCalculate,
                     onTap: () => _calculate(PyramidResult.area),
                   ),
                 ),
@@ -180,7 +154,7 @@ class _PyramidPageState extends State<PyramidPage> {
                     label: 'Volume',
                     type: PyramidResult.volume,
                     activeResult: _controller.activeResult,
-                    enabled: _canVolume,
+                    enabled: _canCalculate,
                     onTap: () => _calculate(PyramidResult.volume),
                   ),
                 ),

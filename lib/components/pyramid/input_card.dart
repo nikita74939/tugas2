@@ -6,7 +6,7 @@ class InputCard extends StatefulWidget {
   final TextEditingController baseController;
   final TextEditingController heightController;
   final TextEditingController slantController;
-  final VoidCallback? onChanged;
+  final VoidCallback? onChanged; // Callback untuk memicu hitung otomatis di Page
 
   const InputCard({
     super.key,
@@ -23,105 +23,38 @@ class InputCard extends StatefulWidget {
 class _InputCardState extends State<InputCard> {
   String? _baseError;
   String? _heightError;
-  String? _slantError;
 
-  bool _hasError(String? e) => e != null;
-  bool _isEmpty(TextEditingController c) => c.text.trim().isEmpty;
-
-  /// Apakah field valid (tidak kosong dan tidak error)
-  bool _isValid(TextEditingController c, String? error) =>
-      !_isEmpty(c) && !_hasError(error);
-
-  bool get canCalculateArea =>
-      _isValid(widget.baseController, _baseError) &&
-      _isValid(widget.slantController, _slantError);
-
-  bool get canCalculateVolume =>
-      _isValid(widget.baseController, _baseError) &&
-      _isValid(widget.heightController, _heightError);
-
-  void _validate(TextEditingController controller, void Function(String?) setError) {
-    final text = controller.text;
-    if (text.isEmpty) {
-      setError(null);
-    } else {
-      final result = InputValidator.parseNumbers(text);
-      setError(result.hasErrors ? 'Hanya angka yang diperbolehkan' : null);
-    }
-    widget.onChanged?.call();
+  // Helper untuk dekorasi TextField agar seragam
+  InputDecoration _decoration(String hint, String? errorText) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: Colors.black26),
+      filled: true,
+      fillColor: const Color(0xFFF2F2F2),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      // Error style di bawah kotak
+      errorText: errorText,
+      errorStyle: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w500),
+    );
   }
 
-  static InputDecoration _decoration(String hint) => InputDecoration(
-        filled: true,
-        fillColor: AppTheme.iconBg,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          borderSide: BorderSide(
-            color: AppTheme.primary.withOpacity(0.4),
-            width: 1.5,
-          ),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        hintText: hint,
-        hintStyle: const TextStyle(
-          color: Color(0xFFBDBDBD),
-          fontWeight: FontWeight.w400,
-        ),
-      );
-
-  Widget _buildInput(
-    String label,
-    TextEditingController controller,
-    String hint,
-    String? errorText,
-    void Function(String?) setError,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: AppTheme.cardSubtitle),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          style: AppTheme.cardTitle,
-          maxLines: null,
-          decoration: _decoration(hint),
-          onChanged: (_) => setState(() => _validate(controller, setError)),
-        ),
-        if (errorText != null) ...[
-          const SizedBox(height: 6),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFF3B30),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.error_rounded, color: Colors.white, size: 15),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    errorText,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ],
-    );
+  // Fungsi validasi internal saat mengetik
+  void _validate(String value, String type) {
+    final validation = InputValidator.parseNumbers(value);
+    setState(() {
+      if (type == 'base') {
+        _baseError = validation.hasErrors ? "Angka tidak valid" : null;
+      } else if (type == 'height') {
+        _heightError = validation.hasErrors ? "Angka tidak valid" : null;
+      }
+    });
+    
+    // Panggil callback agar di Page bisa update nilai Apotema secara real-time
+    if (widget.onChanged != null) widget.onChanged!();
   }
 
   @override
@@ -142,13 +75,61 @@ class _InputCardState extends State<InputCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('INPUT', style: AppTheme.titleMedium),
-          const SizedBox(height: 14),
-          _buildInput('Sisi Alas (a)', widget.baseController, 'Masukkan sisi alas', _baseError, (e) => _baseError = e),
-          const SizedBox(height: 12),
-          _buildInput('Tinggi (t)', widget.heightController, 'Masukkan tinggi', _heightError, (e) => _heightError = e),
-          const SizedBox(height: 12),
-          _buildInput('Apotema Sisi (s)', widget.slantController, 'Masukkan apotema sisi', _slantError, (e) => _slantError = e),
+          const Text('INPUT DATA', style: AppTheme.titleMedium),
+          const SizedBox(height: 18),
+
+          // 1. INPUT SISI ALAS
+          Text('Sisi Alas (a)', style: AppTheme.cardSubtitle),
+          const SizedBox(height: 6),
+          TextField(
+            controller: widget.baseController,
+            keyboardType: TextInputType.number,
+            decoration: _decoration('Contoh: 10', _baseError),
+            onChanged: (v) => _validate(v, 'base'),
+          ),
+
+          const SizedBox(height: 16),
+
+          // 2. INPUT TINGGI
+          Text('Tinggi Limas (t)', style: AppTheme.cardSubtitle),
+          const SizedBox(height: 6),
+          TextField(
+            controller: widget.heightController,
+            keyboardType: TextInputType.number,
+            decoration: _decoration('Contoh: 12', _heightError),
+            onChanged: (v) => _validate(v, 'height'),
+          ),
+
+          const SizedBox(height: 16),
+
+          // 3. DISPLAY APOTEMA (READ ONLY)
+          // Bagian ini di-disable agar user tahu ini hasil hitungan sistem
+          Text('Apotema Sisi (s) - Otomatis', 
+            style: AppTheme.cardSubtitle.copyWith(color: AppTheme.primary)
+          ),
+          const SizedBox(height: 6),
+          TextField(
+            controller: widget.slantController,
+            readOnly: true, // Tidak bisa diketik manual
+            enabled: false, // Memberi efek visual "terkunci"
+            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
+            decoration: InputDecoration(
+              hintText: 'Akan terhitung otomatis',
+              filled: true,
+              fillColor: AppTheme.primary.withOpacity(0.05),
+              prefixIcon: const Icon(Icons.auto_fix_high, size: 20, color: AppTheme.primary),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppTheme.primary.withOpacity(0.2)),
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: 10),
+          const Text(
+            "*Apotema dihitung menggunakan rumus Pythagoras",
+            style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic),
+          ),
         ],
       ),
     );
