@@ -21,8 +21,36 @@ class _AgePageState extends State<AgePage> {
   Map<String, int>? _ageResult;
 
   void _calculate() {
-    _timer?.cancel();
+    // Gabungkan input untuk validasi di UI
+    DateTime birth = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
+      _selectedSecond,
+    );
 
+    // CEK: Apakah waktu lahir lebih besar dari waktu sekarang?
+    if (birth.isAfter(DateTime.now())) {
+      _timer?.cancel();
+      setState(
+        () => _ageResult = null,
+      ); // Reset hasil agar tidak muncul angka ngawur
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Hei, kamu belum lahir! 👶"),
+          backgroundColor: Colors.orange, // Warna peringatan
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return; // Berhenti di sini, jangan lanjut hitung
+    }
+
+    // Jika sudah valid, lanjut hitung seperti biasa
+    _timer?.cancel();
     setState(() {
       _ageResult = _controller.calculateAge(
         _selectedDate,
